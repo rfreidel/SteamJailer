@@ -26,6 +26,6 @@ sh
 Run the Launcher: This will allow you to install Wine-Proton, Steam, launch games, and link the launcher to $HOME/bin.
 sh
 
-    ./steam_launcher
+    ./steam_jailer
 
 By following these steps, you can set up a Steam game launcher on FreeBSD using a jail, ensuring that all necessary libraries and dependencies are available for the games.
