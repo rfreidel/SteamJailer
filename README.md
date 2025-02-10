@@ -6,7 +6,7 @@ It is beyond the scope of this project to provide a wine-proton capable of playi
 
 # Project Structure
 
-Shell Script: To install and configure ezjail, create and start the jail (with the capability to create a new jail if one already exists), and install necessary packages inside the jail. \
+Shell Script: To install and configure ezjail, create and start the jail (with the capability to create a new jail if one already exists), and install necessary packages inside the jail. 
 
 C++ Program: To manage the installation and launching of Steam and games within the jail.
 
