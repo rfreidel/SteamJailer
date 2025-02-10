@@ -14,6 +14,12 @@ Step 1: Shell Script \
 Step 2: C++ Program
 Public code references from 4 repositories
 
+# Installation
+
+    chmod +x  install_pakges.sh 
+    
+    ./install_packages.sh
+    
 # Usage Instructions
 
 Run the Setup Script: This will install ezjail, create and start the jail, and install necessary packages inside the jail. If a jail with the same name already exists, it will create a new jail with a unique name.
@@ -24,7 +30,7 @@ Run the Setup Script: This will install ezjail, create and start the jail, and i
 Compile the C++ Program: This will compile the steam_launcher.cpp program.
 sh
 
-    g++ steam_launcher.cpp -o steam_jailer
+    c++ steam_launcher.cpp -o steam_jailer
 
 Run the Launcher: This will allow you to install Wine-Proton, Steam, launch games, and link the launcher to $HOME/bin.
 sh
