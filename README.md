@@ -13,6 +13,7 @@ Public code references from 4 repositories
 Usage Instructions
 
 Run the Setup Script: This will install ezjail, create and start the jail, and install necessary packages inside the jail. If a jail with the same name already exists, it will create a new jail with a unique name.
+    
     sh
 
     chmod +x steam_jailer_setup.sh
