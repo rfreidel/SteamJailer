@@ -21,6 +21,6 @@ else
 fi
 
 log_message "Setting up environment variables and initializing Wine..."
-sudo jexec "$JAIL_NAME" sh -c "setenv WINE /usr/local/wine-proton/bin/wine; setenv WINE64 /usr/local/wine-proton/bin/wine64; setenv WINEARCH win64; wineboot --init"
+sudo jexec "$JAIL_NAME" sh -c "setenv WINE /usr/local/wine-proton/bin/wine; setenv WINE64 /usr/local/wine-proton/bin/wine; setenv WINEARCH win64; wineboot --init"
 
 log_message "Installation and setup completed successfully."
