@@ -9,7 +9,7 @@ It is beyond the scope of this project to provide a wine-proton capable of playi
 Shell Script: To install and configure ezjail, create and start the jail (with the capability to create a new jail if one already exists), and install necessary packages inside the jail.
 C++ Program: To manage the installation and launching of Steam and games within the jail.
 
-Step 1: Shell Script
+Step 1: Shell Script \
 Step 2: C++ Program
 Public code references from 4 repositories
 
