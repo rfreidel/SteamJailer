@@ -38,32 +38,32 @@ std::string show_file_selection_dialog() {
 }
 
 void set_wine_environment() {
-    setenv("WINE", "/usr/local/bin/wine", 1);
-    setenv("WINE64", "/usr/local/bin/wine64", 1);
+    setenv("WINE", "/usr/local/WINE-PROTON/bin/wine", 1);
+    setenv("WINE-PROTON", "/usr/local/wine-proton/bin/wine", 1);
     setenv("WINEARCH", "win64", 1);
 }
 
 void install_wine_proton() {
     show_message("Installing Wine-Proton in Jail...");
-    run_command("sudo jexec steam pkg install -y wine-proton");
+    run_command("sudo jexec pkg install -y wine-proton winetricks");
     show_message("Installation completed. Wine-Proton is installed in the jail.");
 }
 
 void install_steam() {
     show_message("Installing Steam in Jail...");
-    run_command("sudo jexec steam winetricks steam");
+    run_command("sudo jexec winetricks steam");
     show_message("Steam installation completed successfully.");
 }
 
 void launch_game(const std::string &game_path) {
-    std::string command = "sudo jexec steam wine \"" + game_path + "\"";
+    std::string command = "sudo jexec wine steam  \"" + game_path + "\"";
     show_message("Launching game: " + game_path);
     run_command(command);
 }
 
 void launch_steam() {
     show_message("Launching Steam in Jail...");
-    run_command("sudo jexec steam wine ~/.wine/drive_c/Program\\ Files\\ \\(x86\\)/Steam/Steam.exe");
+    run_command("sudo jexec wine ~/.wine/drive_c/Program\\ Files\\ \\(x86\\)/Steam/Steam.exe");
 }
 
 void link_to_home_bin() {
