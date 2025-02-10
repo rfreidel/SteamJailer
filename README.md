@@ -13,7 +13,7 @@ Step 1: Shell Script \
 Step 2: C++ Program
 Public code references from 4 repositories
 
-Usage Instructions
+# Usage Instructions
 
 Run the Setup Script: This will install ezjail, create and start the jail, and install necessary packages inside the jail. If a jail with the same name already exists, it will create a new jail with a unique name.
     
