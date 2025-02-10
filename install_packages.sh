@@ -1,13 +1,13 @@
 #!/bin/sh
 
-JAIL_NAME="steam"
+JAIL_NAME="$1"
 
 # Function to log messages
 log_message() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1"
 }
 
-log_message "Updating package repository and installing necessary packages in the jail '$JAIL_NAME'..."
+log_message "Installing packages in the jail '$JAIL_NAME'..."
 sudo jexec "$JAIL_NAME" pkg update
 sudo jexec "$JAIL_NAME" pkg install -y wine wine64 wine-proton winetricks zenity
 

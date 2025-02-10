@@ -28,48 +28,26 @@ if ! sudo service ezjail start; then
     exit 1
 fi
 
-# Step 4: Verify if the jail exists
+# Step 4: Check if the jail already exists and create a new one if it does
 log_message "Checking if the jail '$JAIL_NAME' exists..."
-if ! sudo ezjail-admin list | grep -q "$JAIL_NAME"; then
-    log_message "Jail '$JAIL_NAME' not found. Creating the jail..."
-    if ! sudo ezjail-admin create "$JAIL_NAME" 'lo1|127.0.1.1'; then
-        log_message "Failed to create the jail '$JAIL_NAME'."
-        exit 1
-    fi
-    if ! sudo ezjail-admin start "$JAIL_NAME"; then
-        log_message "Failed to start the jail '$JAIL_NAME'."
-        exit 1
-    fi
-else
-    log_message "Jail '$JAIL_NAME' already exists."
+if sudo ezjail-admin list | grep -q "$JAIL_NAME"; then
+    log_message "Jail '$JAIL_NAME' already exists. Creating a new jail..."
+    NEW_JAIL_NAME="${JAIL_NAME}_$(date +%s)"
+    JAIL_NAME="$NEW_JAIL_NAME"
 fi
 
-# Step 5: Start the jail if it is not running
-log_message "Ensuring the jail '$JAIL_NAME' is running..."
-if ! sudo jls | grep -q "$JAIL_NAME"; then
-    if ! sudo ezjail-admin start "$JAIL_NAME"; then
-        log_message "Failed to start the jail '$JAIL_NAME'."
-        exit 1
-    fi
-    log_message "Jail '$JAIL_NAME' started."
-else
-    log_message "Jail '$JAIL_NAME' is already running."
-fi
-
-# Step 6: Install wine-proton in the jail
-log_message "Installing wine-proton in the jail '$JAIL_NAME'..."
-sudo jexec "$JAIL_NAME" pkg update
-sudo jexec "$JAIL_NAME" pkg install -y wine wine64 wine-proton winetricks zenity
-
-log_message "Verifying the installation of wine-proton..."
-if sudo jexec "$JAIL_NAME" pkg info | grep -q "wine-proton"; then
-    log_message "wine-proton is installed successfully in the jail '$JAIL_NAME'."
-else
-    log_message "Failed to install wine-proton in the jail '$JAIL_NAME'."
+# Step 5: Create and start the jail
+log_message "Creating the jail '$JAIL_NAME'..."
+if ! sudo ezjail-admin create "$JAIL_NAME" 'lo1|127.0.1.1'; then
+    log_message "Failed to create the jail '$JAIL_NAME'."
     exit 1
 fi
 
-log_message "Setting up environment variables and initializing Wine..."
-sudo jexec "$JAIL_NAME" sh -c "setenv WINE /usr/local/bin/wine; setenv WINE64 /usr/local/bin/wine64; setenv WINEARCH win64; wineboot --init"
+log_message "Starting the jail '$JAIL_NAME'..."
+if ! sudo ezjail-admin start "$JAIL_NAME"; then
+    log_message "Failed to start the jail '$JAIL_NAME'."
+    exit 1
+fi
 
-log_message "Installation and setup completed successfully."
+# Step 6: Install packages in the jail
+sh install_packages.sh "$JAIL_NAME"
