@@ -16,7 +16,7 @@ Public code references from 4 repositories
 
 # Installation
 
-    chmod +x  install_pakges.sh 
+    chmod +x  install_packges.sh 
     
     ./install_packages.sh
     
