@@ -2,7 +2,7 @@
 
 SUBNOTE: This pile of "code" may not function, yet the launcher is based on a personal game launcher I build for my own use, to release it to the public is quite an undertaking, so if you are familiar with c++ please look at the code, submit patches, test, then following my next moment of inspiration, I'll update it again
 
-This projects purpose is to automate the installation of Steam within a jail on FreeBSD, including the installation of wine-proton both system-wide and within the jail. The project will also provide options to install necessary patches and enable ezjail in the system's rc.conf. Finally, it will offer the ability to link the launcher to the user's $HOME/bin folder with a default program icon for FreeBSD.
+This projects purpose is to automate the installation of Steam within a jail on FreeBSD, including the installation of wine-proton both system-wide and within the jail. The project will also provide options to install necessary patches and enable ezjail in the system's rc.conf. Finally, it will offer the ability to link the launcher to the user's $HOME/bin folder with a default program icon for FreeBSD. My script for installing jails is currently broken, I had to take a step away rom it for a bit, yet I believe the c++ code while it may be solid does not properly function at this state , well mostly due to the jail issue
 
 It is beyond the scope of this project to provide a wine-proton capable of playing modern games, the current wine-proton is capable of playing SkyrimSE, Dark SoulsIII, etc, this project will grow depending on base package support
 
@@ -22,6 +22,8 @@ Public code references from 4 repositories
     
     ./install_packages.sh
     
+
+
 # Usage Instructions
 
 Run the Setup Script: This will install ezjail, create and start the jail, and install necessary packages inside the jail. If a jail with the same name already exists, it will create a new jail with a unique name. (note: I may change the jail config, something about seems incorrect), t this point in time it does sort of setup the jail correctly, by later this evening I will update the script for installing wine-proton, I need to test things first, Skyrim here I come
