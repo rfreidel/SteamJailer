@@ -1,5 +1,6 @@
 # Project: Steam Jailer
-SUBNOTE: This pile of "code" may not function  
+
+SUBNOTE: This pile of "code" may not function, yet the launcher is based on a personal game launcher I build for my own use, to release it to the public is quite an undertaking, so if you are familiar with c++ please look at the code, submit patches, test, then following my next moment of inspiration, I'll update it again
 
 This projects purpose is to automate the installation of Steam within a jail on FreeBSD, including the installation of wine-proton both system-wide and within the jail. The project will also provide options to install necessary patches and enable ezjail in the system's rc.conf. Finally, it will offer the ability to link the launcher to the user's $HOME/bin folder with a default program icon for FreeBSD.
 
