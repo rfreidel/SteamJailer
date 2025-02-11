@@ -40,12 +40,12 @@ std::string show_file_selection_dialog() {
 void set_wine_environment() {
     setenv("WINE", "/usr/local/wine-proton/bin/wine", 1);
     setenv("WINE-PROTON", "/usr/local/wine-proton/bin/wine", 1);
-    setenv("WINEARCH", "win64", 1);
+    setenv("WINEARCH", "win32", 1);
 }
 
 void install_wine_proton() {
     show_message("Installing Wine-Proton in Jail...");
-    run_command("sudo jexec pkg install -y wine-proton winetricks");
+    run_command("sudo jexec pkg install -y wine-proton winetricks && winetricks dxvk");
     show_message("Installation completed. Wine-Proton is installed in the jail.");
 }
 
