@@ -24,7 +24,7 @@ Public code references from 4 repositories
     
 # Usage Instructions
 
-Run the Setup Script: This will install ezjail, create and start the jail, and install necessary packages inside the jail. If a jail with the same name already exists, it will create a new jail with a unique name.
+Run the Setup Script: This will install ezjail, create and start the jail, and install necessary packages inside the jail. If a jail with the same name already exists, it will create a new jail with a unique name. (note: I may change the jail config, something about seems incorrect), t this point in time it does sort of setup the jail correctly, by later this evening I will update the script for installing wine-proton, I need to test things first, Skyrim here I come
     
     chmod +x steam_jailer_setup.sh
     ./steam_jailer_setup.sh
