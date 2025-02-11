@@ -45,7 +45,7 @@ void set_wine_environment() {
 
 void install_wine_proton() {
     show_message("Installing Wine-Proton in Jail...");
-    run_command("sudo jexec pkg install -y wine-proton winetricks && winetricks dxvk");
+    run_command("sudo jexec pkg install -y wine-proton winetricks && winetricks dxvk && winetricks --foce steam");
     show_message("Installation completed. Wine-Proton is installed in the jail.");
 }
 
