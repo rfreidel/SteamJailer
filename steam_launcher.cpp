@@ -19,7 +19,7 @@ void show_message(const std::string &message) {
 }
 
 std::string show_file_selection_dialog() {
-    std::string command = "zenity --file-selection --title=\"Select a Windows Game Executable\"";
+    std::string command = "zenity --file-selection --title=\"Select a Windows Game Exe\"";
     char buffer[128];
     std::string result = "";
     FILE* pipe = popen(command.c_str(), "r");
@@ -38,7 +38,7 @@ std::string show_file_selection_dialog() {
 }
 
 void set_wine_environment() {
-    setenv("WINE", "/usr/local/WINE-PROTON/bin/wine", 1);
+    setenv("WINE", "/usr/local/wine-proton/bin/wine", 1);
     setenv("WINE-PROTON", "/usr/local/wine-proton/bin/wine", 1);
     setenv("WINEARCH", "win64", 1);
 }
@@ -76,7 +76,7 @@ void link_to_home_bin() {
 int main() {
     set_wine_environment();
 
-    std::string choice = "zenity --list --title=\"Steam Game Launcher\" --column=\"Task\" Install_Wine_Proton Install_Steam Launch_Game Launch_Steam Link_to_Home_Bin";
+    std::string choice = "zenity --list --title=\"Steam Jailer\" --column=\"Task\" Install_Wine_Proton Install_Steam Launch_Game Launch_Steam Link_to_Home_Bin";
     char buffer[128];
     std::string result = "";
     FILE* pipe = popen(choice.c_str(), "r");
