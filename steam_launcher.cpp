@@ -40,20 +40,21 @@ std::string show_file_selection_dialog() {
 void set_wine_environment() {
     setenv("WINE", "/usr/local/wine-proton/bin/wine", 1);
     setenv("WINE-PROTON", "/usr/local/wine-proton/bin/wine", 1);
-    setenv("WINEARCH", "win64", 1);
+    setenv("WINEARCH", "win32", 1);
 }
 
 void install_wine_proton() {
     show_message("Installing Wine-Proton in Jail...");
     run_command("sudo jexec pkg install -y wine-proton winetricks");
+    run_command("/usr/local/wine-proton/bin/pkg32.sh install wine-proton mesa-dri
     
     show_message("Installation completed. Wine-Proton is installed in the jail.");
 }
 
 void install_dxvk() {
     show_message("Installing winetricks in Jail...");
-    run_command("jexec WINE=/usr/local/wine-proton/bin/wine winetricks --force corefonts nvapi dxvk steam");
-    show_message("dxvk installation completed successfully.");
+    run_command("jexec WINE=/usr/local/wine-proton/bin/wine winetricks --force corefonts dxvk nvapi steam");
+    show_message("dxvk & steam installation completed successfully.");
 }
 
 void launch_game(const std::string &game_path) {
