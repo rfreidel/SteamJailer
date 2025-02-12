@@ -1,6 +1,6 @@
 # Project: Steam Jailer
 
-SUBNOTE: This pile of "code" may not function, yet the launcher is based on a personal game launcher I build for my own use, to release it to the public is quite an undertaking, so if you are familiar with c++ please look at the code, submit patches, test, then following my next moment of inspiration, I'll update it again
+SUBNOTE: As of 02/11/2025 This project requires two things for completion, the #1 issue is the jail setup, the launcher is based on a personal game launcher I build for my own use, to release it to the public is quite an undertaking, so if you are familiar with c++ please look at the code, submit patches, test, then following my next moment of inspiration, I'll update it again
 
 Currently I am going through all the needed steps to make the project function, thus far I have had to fill in manually the contents of ezjail.conf, and I had forgotten about having ports set up for the jail, I have completed these steps, re compile/start program
 
