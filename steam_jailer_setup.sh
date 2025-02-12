@@ -1,5 +1,14 @@
 #!/bin/sh
 
+export jail_wine_rootdir="/usr/jails/wine"
+export jail_wine_hostname="wine"
+export jail_wine_ip="lo1|127.0.1.1"
+export jail_wine_exec_start="/bin/sh /etc/rc"
+export jail_wine_exec_stop="/bin/sh /etc/rc.shutdown"
+export jail_wine_mount_enable="YES"
+export jail_wine_devfs_enable="YES"
+
+
 JAIL_NAME="steamjailer"
 
 # Function to log messages
