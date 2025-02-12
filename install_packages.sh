@@ -10,7 +10,7 @@ log_message() {
 log_message "Installing packages in the jail '$JAIL_NAME'..."
 sudo jexec "$JAIL_NAME" pkg update
 sudo jexec "$JAIL_NAME" pkg install -y wine wine64 wine-proton winetricks zenity
-sudo jexec "$JAIL_NAME" winetricks dxvk dxvk_nvapi steam
+sudo jexec "$JAIL_NAME" winetricks dxvk vkd3d nvapi vcrun2022 steam
 
 log_message "Verifying the installation of wine-proton winetricks steam..."
 if sudo jexec "$JAIL_NAME" pkg info | grep -q "wine-proton"; then
