@@ -55,12 +55,12 @@ void install_wine_proton() {
 
 void install_dxvk() {
     show_message("Installing those gol darn thangs in Jail...");
-    run_command("jexec WINE=/usr/local/wine-proton/bin/wine winetricks --force corefonts dxvk nvapi steam");
+    run_command("jexec WINE=/usr/local/wine-proton/bin/wine winetricks --force corefonts dxvk nvapi");
     show_message("dxvk & steam installation completed successfully.");
 }
 
 void launch_game(const std::string &game_path) {
-    std::string command = "sudo jexec WINE=/usr/local/wine-proton/bin/wine wine steam -cef-disable-sandbox  \"" + game_path + "\"";
+    std::string command = "sudo jexec WINE=/usr/local/wine-proton/bin/wine wine steam -cef-disable-sandbox -cef-disable-gpu-compositing -cef-in-process-gpu \"" + game_path + "\"";
     show_message("Launching game: " + game_path);
     run_command(command);
 }
