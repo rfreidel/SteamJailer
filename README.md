@@ -20,11 +20,10 @@ Public code references from 4 repositories
 
 # Installation
 
-    chmod +x  install_packges.sh 
+    chmod +x  install_packages.sh 
     
     ./install_packages.sh
     
-
 
 # Usage Instructions
 
