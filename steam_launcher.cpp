@@ -40,8 +40,8 @@ std::string show_file_selection_dialog() {
 void set_wine_environment() {
     setenv("WINE", "/usr/local/wine-proton/bin/wine", 1);
     setenv("WINE-PROTON", "/usr/local/wine-proton/bin/wine", 1);
-    setenv{"WINE-PATH", "~/.steam-games", 1);
-    setenv("WINEARCH", "win32", 1);
+    setenv{"WINEPATH", "~/.steam-games", 1);
+    setenv("WINEARCH", "win64", 1);
 }
 
 void install_wine_proton() {
