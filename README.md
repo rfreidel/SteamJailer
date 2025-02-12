@@ -6,7 +6,7 @@ Currently I am going through all the needed steps to make the project function, 
 
 This projects purpose is to automate the installation of Steam within a jail on FreeBSD, including the installation of wine-proton both system-wide and within the jail. The project will also provide options to install necessary patches and enable ezjail in the system's rc.conf. Finally, it will offer the ability to link the launcher to the user's $HOME/bin folder with a default program icon for FreeBSD. My script for installing jails is currently broken, I had to take a step away rom it for a bit, yet I believe the c++ code while it may be solid, the functions may be incorrect, and does not properly function at this state , well mostly due to the jail issue
 
-It is beyond the scope of this project to provide a wine-proton capable of playing modern games, the current wine-proton is capable of playing SkyrimSE, Dark SoulsIII, Fallout4, etc. This project will grow depending on base package support
+It is beyond the scope of this project to provide a wine-proton capable of playing modern games, the current wine-proton in ports and packages is capable of playing SkyrimSE, Dark SoulsIII, Fallout4, etc. This project will grow depending on base package support
 
 # Project Structure
 
