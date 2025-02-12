@@ -57,7 +57,7 @@ void install_dxvk() {
 }
 
 void launch_game(const std::string &game_path) {
-    std::string command = "sudo jexec WINE=/usr/local/wine-proton/bin/wine wine steam cef-disable-sandbox  \"" + game_path + "\"";
+    std::string command = "sudo jexec WINE=/usr/local/wine-proton/bin/wine wine steam -cef-disable-sandbox  \"" + game_path + "\"";
     show_message("Launching game: " + game_path);
     run_command(command);
 }
