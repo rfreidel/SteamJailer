@@ -19,7 +19,7 @@ void show_message(const std::string &message) {
 }
 
 std::string show_file_selection_dialog() {
-    std::string command = "zenity --file-selection --title=\"Select a Windows Game Exe\"";
+    std::string command = "zenity --file-selection --title=\"Select a Windows Game Executable\"";
     char buffer[128];
     std::string result = "";
     FILE* pipe = popen(command.c_str(), "r");
@@ -40,30 +40,31 @@ std::string show_file_selection_dialog() {
 void set_wine_environment() {
     setenv("WINE", "/usr/local/wine-proton/bin/wine", 1);
     setenv("WINE-PROTON", "/usr/local/wine-proton/bin/wine", 1);
-    setenv("WINEARCH", "win32", 1);
+    setenv("WINEARCH", "win64", 1);
 }
 
 void install_wine_proton() {
     show_message("Installing Wine-Proton in Jail...");
-    run_command("sudo jexec pkg install -y wine-proton winetricks && winetricks dxvk && winetricks --foce steam");
+    run_command("sudo jexec pkg install -y wine-proton winetricks");
+    
     show_message("Installation completed. Wine-Proton is installed in the jail.");
 }
 
-void install_steam() {
-    show_message("Installing Steam in Jail...");
-    run_command("sudo jexec winetricks steam");
-    show_message("Steam installation completed successfully.");
+void install_dxvk() {
+    show_message("Installing winetricks in Jail...");
+    run_command("jexec WINE=/usr/local/wine-proton/bin/wine winetricks --force corefonts nvapi dxvk steam");
+    show_message("dxvk installation completed successfully.");
 }
 
 void launch_game(const std::string &game_path) {
-    std::string command = "sudo jexec wine steam  \"" + game_path + "\"";
+    std::string command = "sudo jexec WINE=/usr/local/wine-proton/bin/wine wine steam cef-disable-sandbox  \"" + game_path + "\"";
     show_message("Launching game: " + game_path);
     run_command(command);
 }
 
 void launch_steam() {
     show_message("Launching Steam in Jail...");
-    run_command("sudo jexec wine ~/.wine/drive_c/Program\\ Files\\ \\(x86\\)/Steam/Steam.exe");
+    run_command("sudo jexec WINE=/usr/local/wine-proton/bin/wine wine ~/.wine/drive_c/Program\\ Files\\ \\(x86\\)/Steam/Steam.exe -cef-disable-sandbox -cef-disable-gpu-compositing -cef-in-process-gpu");
 }
 
 void link_to_home_bin() {
@@ -76,7 +77,7 @@ void link_to_home_bin() {
 int main() {
     set_wine_environment();
 
-    std::string choice = "zenity --list --title=\"Steam Jailer\" --column=\"Task\" Install_Wine_Proton Install_Steam Launch_Game Launch_Steam Link_to_Home_Bin";
+    std::string choice = "zenity --list --title=\"Steam Game Launcher\" --column=\"Task\" Install_Wine_Proton Install_Steam Launch_Game Launch_Steam Link_to_Home_Bin";
     char buffer[128];
     std::string result = "";
     FILE* pipe = popen(choice.c_str(), "r");
@@ -94,8 +95,8 @@ int main() {
 
     if (result == "Install_Wine_Proton") {
         install_wine_proton();
-    } else if (result == "Install_Steam") {
-        install_steam();
+    } else if (result == "Install_dxvk") {
+        install_dxvk();
     } else if (result == "Launch_Game") {
         std::string game_path = show_file_selection_dialog();
         if (!game_path.empty()) {
