@@ -42,6 +42,7 @@ void set_wine_environment() {
     setenv("WINE-PROTON", "/usr/local/wine-proton/bin/wine", 1);
     setenv{"WINEPATH", "~/.steam-games", 1);
     setenv("WINEARCH", "win64", 1);
+    setenv("JEXEC", "/usr/local/sbin/jexec", 1);
 }
 
 void install_wine_proton() {
