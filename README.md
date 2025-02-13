@@ -27,6 +27,25 @@ It is beyond the scope of this project to provide a wine-proton capable of playi
     # SteamJailer
      Build steam_jailer: c++ steam_launcher.cpp -o steam_jailer then ./steam_jailer
     
+This is how ezjail is set in my /etc/rc.conf you need to enter this and then re-start services
+
+    # To specify the start up order of your ezjails, use these lines to
+    # create a Jail dependency tree. See rcorder(8) for more details.
+    #
+    # PROVIDE: standard_ezjail
+    # REQUIRE: 
+    # BEFORE: 
+    #
+    export jail_steamjailer_1739358384_hostname="steamjailer_1739358384"
+    export jail_steamjailer_1739358384_ip="lo1|127.0.1.1"
+    export jail_steamjailer_1739358384_rootdir="/usr/jails/steamjailer_1739358384"
+    export jail_steamjailer_1739358384_exec_start="/bin/sh /etc/rc"
+    export jail_steamjailer_1739358384_exe_stop=""
+    export jail_steamjailer_1739358384_mount_enable="YES"
+    export jail_steamjailer_1739358384_devfs_enable="YES"
+    export jail_steamjailer_1739358384_devfs_ruleset="devfsrules\_jail"
+    export jail_steamjailer_1739358384_procfs_enable="YES"
+    export jail_steamjailer_1739358384_fdescfs_enable="YES"
 
 # Project Structure
 
