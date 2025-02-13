@@ -6,7 +6,8 @@ The `steam_installer.sh` is fully functioning as of Wed Feb 12 18:34:52 PST 2025
 
     zroot/jails            96K  1.44T    96K  /zroot/jails
     
-sets up the zfs stuff required, identifies as shell based software, will identify what your install is on, restarts services devfs, ezjail, following the successful installion of ezjail and the setup of the jail the project then takes control of your computer, don't be concerned, project will return control momentarily. The first jail setup seems to take a while, subsequent installs are quick on this nvme drive I keep my system updated and the script is setup to installworld if you require different usage, alter to suit 
+sets up the zfs stuff required, identifies as shell based software, will identify what your install is on, restarts services devfs, ezjail, following the successful installion of ezjail and the setup of the jail the project then takes control of your computer, don't be concerned, project will return control momentarily. The first jail setup seems to take a while, subsequent installs are quick on this nvme drive I keep my system updated and the script is setup to installworld into the jail, 
+\if you require different usage, alter to suit 
 
 The project then installs wine-proton winetricks and modules via a commented shell script where you can add or alter what the script installs in the jail
 
