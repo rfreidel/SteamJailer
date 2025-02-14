@@ -29,7 +29,7 @@ pkg install iocage
 2. Create a New Jail
 sh
 
-iocage create -n steamjailer -r 12.2-RELEASE
+iocage create -n steamjailer -r 14.2-RELEASE
 
     -n steamjailer: Specifies the name of the jail.
     -r 14.2-RELEASE: Specifies the FreeBSD release version.
