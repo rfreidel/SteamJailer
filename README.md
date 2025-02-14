@@ -8,7 +8,7 @@ Installs iocache configures and loads your jail, installs wine-proton, winetrick
 This project is very invasive, it not only installs a jail, jail manager, wine-proton, but also and eventually Steam
 
 # Intention
-This projects purpose is to automate the installation of Steam within a jail on FreeBSD, including the installation of wine-proton both system-wide and within the jail. The project will also provide options to install necessary patches and enable iocage in the system's rc.conf. Finally, it will eventually offer the ability to link the launcher to the user's $HOME/bin folder with a default program icon for FreeBSD, I am mostly concerned at this time for posix compliance, stability, and function in the main part of project. The project `steamjailer` provides an interface allowing control of Steam with-in the jail
+This projects intended purpose is to automate the installation of Steam within a jail on FreeBSD, including the installation of wine-proton both system-wide and within the jail. The project will also provide options to install necessary patches and enable iocage in the system's rc.conf. Finally, it will eventually offer the ability to link the launcher to the user's $HOME/bin folder with a default program icon for FreeBSD, I am mostly concerned at this time for posix compliance, stability, and function in the main part of project. The project `steamjailer` provides an interface allowing control of Steam with-in the jail using zenity
 
 It is beyond the scope of this project to provide a wine-proton capable of playing modern games, the current wine-proton in ports and packages is capable of playing SkyrimSE, Dark SoulsIII, Fallout4, etc. This project will grow depending on base package support
 
