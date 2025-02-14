@@ -2,7 +2,7 @@
 
 An ambitious multipart part project uses iocache and custom c++ and shell to provide this service
 
-Installs iocache configures and loads your jail, installs wine-proton, winetricks in a script that is commented into the jail, installs modules, and eventualy Steam
+Installs iocache configures and loads your jail, installs wine-proton, winetricks in a script that is commented into the jail, installs modules, and eventualy Steam using Posix compliant syntax, I think
 
 # Warning
 This project is very invasive, it not only installs wine-proton, but also a jail manager, and eventually Steam
