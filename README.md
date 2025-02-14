@@ -59,7 +59,18 @@ iocage console steamjailer
 Once inside the jail, install Steam and any dependencies:
 sh
 
-pkg install steam
+# Download Steam installer
+echo "Downloading Steam installer..."
+iocage exec $JAIL_NAME fetch -o $STEAM_INSTALLER_PATH $STEAM_INSTALLER_URL
+
+# Install Steam
+echo "Installing Steam..."
+iocage exec $JAIL_NAME sh -c "sh $STEAM_INSTALLER_PATH"
+
+# Wait for Steam installation to complete
+echo "Waiting for Steam installation to complete..."
+sleep 60
+
 
 7. Configure Networking
 
