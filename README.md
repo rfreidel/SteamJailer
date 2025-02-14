@@ -1,6 +1,6 @@
 # Project: Steam Jailer
 
-An ambitious multipart part project uses iocache and custom c++ and shell to provide this service
+An ambitious multipart part project uses iocache and custom c++ and shell to provide this function
 
 Installs iocache configures and loads your jail, installs wine-proton, winetricks in a script that is commented into the jail, installs modules, and eventualy Steam using Posix compliant syntax, I think
 
@@ -8,68 +8,76 @@ Installs iocache configures and loads your jail, installs wine-proton, winetrick
 This project is very invasive, it not only installs wine-proton, but also a jail manager, and eventually Steam
 
 # Intention
-This projects purpose is to automate the installation of Steam within a jail on FreeBSD, including the installation of wine-proton both system-wide and within the jail. The project will also provide options to install necessary patches and enable ezjail in the system's rc.conf. Finally, it will offer the ability to link the launcher to the user's $HOME/bin folder with a default program icon for FreeBSD. The project `steamjailer` provides an interface allowing control of Steam with-in the jail
+This projects purpose is to automate the installation of Steam within a jail on FreeBSD, including the installation of wine-proton both system-wide and within the jail. The project will also provide options to install necessary patches and enable iocage in the system's rc.conf. Finally, it will eventually offer the ability to link the launcher to the user's $HOME/bin folder with a default program icon for FreeBSD, I am mostly concerned at this time for posix compliance, stability, and function in the main part of project. The project `steamjailer` provides an interface allowing control of Steam with-in the jail
 
 It is beyond the scope of this project to provide a wine-proton capable of playing modern games, the current wine-proton in ports and packages is capable of playing SkyrimSE, Dark SoulsIII, Fallout4, etc. This project will grow depending on base package support
 
-The `steam_installer.sh` is almost fully functioning, I have yet to test `jailer`'s functions with it, this little shell script was quite the undertaking, it install's ezjail as per the FreeBSD Foundation,
+# TL;DR: Using iocage to Interface with Jail SteamJailer
 
-    zroot/jails            96K  1.44T    96K  /zroot/jails
-    
-sets up the zfs stuff required, identifies as shell based software, will identify what your install is on, restarts services devfs, following the successful installion of ezjail and the setup of the jail the project then takes control of your computer, don't be concerned, project will return control momentarily. The first jail setup seems to take a while, subsequent installs are quick on this nvme drive I keep my system updated and the script is setup to installworld into the jail, 
-if you require different usage, alter to suit 
+## What is iocage?
+iocage is a FreeBSD jail manager that simplifies the creation, management, and maintenance of jails. It provides a command-line interface for managing jails and supports various features like jail templates, resource limits, and networking configuration.
 
-The project then installs wine-proton winetricks and modules via a commented shell script where you can add or alter what the script installs in the jail
+## What is SteamJailer?
+SteamJailer is a specific jail configuration designed to run Steam within a FreeBSD jail. It ensures that Steam operates in a contained environment, isolating it from the rest of the system for security and management purposes.
 
-This is the jail created on my computer
+## Steps to Interface with SteamJailer using iocage
 
-    ronf@bsdbox:~/git/jailer/v1 $ sudo ezjail-admin list
-    STA JID  IP              Hostname                       Root Directory
-    --- ---- --------------- ------------------------------ ------------------------
-    DS  N/A  127.0.1.1       steamjailer_1739358384         /usr/jails/steamjailer_1739358384
-    DSN N/A  -                                              
+### 1. Install iocage
+```sh
+pkg install iocage
 
-
-
-    # SteamJailer
-     Build steam_jailer: c++ steam_launcher.cpp -o steam_jailer then ./steam_jailer
-    
-This is how ezjail is set in my /etc/rc.conf you need to enter this and then re-start services
-
-# Tip
-
-If this project has difficulty if your zpool already exists, then enter
-
-    sudo zpool import -o readonly=off zroot
-
-This command will import the existing pool    
-
-# Project Structure
-
-Shell Script: To install and configure ezjail, create and start the jail (with the capability to create a new jail if one already exists), and install necessary packages inside the jail. 
-
-C++ Program: To manage the installation and launching of Steam and games within the jail.
-
-Step 1: Shell Script
-
-Step 2: C++ Program
-
-Public code references from 4 repositories
-
-
-# Troubleshooting
-
-If you encounter issues, ensure that:
-
-    The ZFS pool is online and healthy.
-    The ezjail configuration is set up correctly.
-    The /etc/devfs.rules file is configured to allow jail access to /dev/zfs.
-
-Refer to the log messages in the script for additional information and debugging steps.
-Run the Jailer: This will allow you to install items the other scipt may have missed, launch Steam, launch games, and link the launcher to $HOME/bin
-
+2. Create a New Jail
 sh
 
-    ./steam_jailer
+iocage create -n steamjailer -r 12.2-RELEASE
 
-By following these steps, you can set up a Steam game launcher on FreeBSD using a jail, ensuring that all necessary libraries and dependencies are available for the games, if anything is missing simply add it with wintricks in the script.
+    -n steamjailer: Specifies the name of the jail.
+    -r 12.2-RELEASE: Specifies the FreeBSD release version.
+
+3. Set Jail Configuration
+
+Configure the jail to meet the requirements of SteamJailer:
+sh
+
+iocage set boot=on steamjailer
+iocage set allow_raw_sockets=1 steamjailer
+iocage set allow_mount=1 steamjailer
+iocage set allow_mount_devfs=1 steamjailer
+
+4. Start the Jail
+sh
+
+iocage start steamjailer
+
+5. Access the Jail
+sh
+
+iocage console steamjailer
+
+6. Install Steam Inside the Jail
+
+Once inside the jail, install Steam and any dependencies:
+sh
+
+pkg install steam
+
+7. Configure Networking
+
+Ensure the jail has access to the internet and Steam servers. This may involve setting up NAT or other network configurations on the host system.
+8. Run Steam
+
+Launch Steam from within the jail and proceed with the normal Steam setup and usage.
+Useful Commands
+
+    List Jails: iocage list
+    Stop Jail: iocage stop steamjailer
+    Restart Jail: iocage restart steamjailer
+    Update Jail: iocage update steamjailer
+
+Notes
+
+    Ensure the host system has the necessary resources to run Steam within a jail.
+    Regularly update both the FreeBSD system and the jail to maintain security and compatibility.
+    Consult the iocage documentation for advanced configurations and troubleshooting.
+
+For more detailed information, refer to the official iocage and FreeBSD documentation.
