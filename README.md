@@ -20,7 +20,7 @@ It is beyond the scope of this project to provide a wine-proton capable of playi
 iocage is a FreeBSD jail manager that simplifies the creation, management, and maintenance of jails. It provides a command-line interface for managing jails and supports various features like jail templates, resource limits, and networking configuration.
 
 ## What is SteamJailer?
-SteamJailer is a specific jail configuration designed to run Steam within a FreeBSD jail. It ensures that Steam operates in a contained environment, isolating it from the rest of the system for security and management purposes.
+SteamJailer is a specific jail configuration designed to install Steam within a FreeBSD jail. It ensures that Steam operates in a contained environment, isolating it from the rest of the system for security and management purposes.
 
 ## Example Steps to Interface with SteamJailer using iocage
 
@@ -61,6 +61,7 @@ iocage console steamjailer
 Once inside the jail, install Steam and any dependencies:
 sh
 
+(Code project uses)
 # Download Steam installer
 echo "Downloading Steam installer..."
 iocage exec $JAIL_NAME fetch -o $STEAM_INSTALLER_PATH $STEAM_INSTALLER_URL
@@ -77,7 +78,10 @@ sleep 60
 7. Configure Networking
 
 Ensure the jail has access to the internet and Steam servers. This may involve setting up NAT or other network configurations on the host system.
+
 8. Run Steam
+
+'jailer' is a c++ Posix compatible app utilizes zenity and provides a GUI for the Steam install
 
 Launch Steam from within the jail and proceed with the normal Steam setup and usage.
 Useful Commands
