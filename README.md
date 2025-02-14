@@ -22,7 +22,7 @@ SteamJailer is a specific jail configuration designed to run Steam within a Free
 
 ## Example Steps to Interface with SteamJailer using iocage
 
-### 1. Install iocage
+### 1. Install iocage (Project will do this for you)
 ```sh
 pkg install iocage
 
