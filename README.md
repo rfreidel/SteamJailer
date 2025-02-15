@@ -22,7 +22,7 @@ It is beyond the scope of this project to provide a wine-proton capable of playi
 iocage is a FreeBSD jail manager that simplifies the creation, management, and maintenance of jails. It provides a command-line interface for managing jails and supports various features like jail templates, resource limits, and networking configuration.
 
 ## What is SteamJailer?
-SteamJailer is a specific jail automatic installation and configuration designed to install Steam within a FreeBSD jail. It ensures that Steam operates in a contained environment, isolating it from the rest of the system for security and management purposes.
+SteamJailer is an all encompassing term for a project that fulfills specific jail automatic installation and configuration designed to install Steam within a FreeBSD jail. It ensures that Steam operates in a contained environment, isolating it from the rest of the system for security and management purposes.
 
 ## Modularity
 I have the thought throughout the building of this project that the project should be modular in that it will allow one to customize the install by only installing part, like whatif a user already has a jail installed and running? Well, I suppose I cannot get there yet, at this point the project will target those who are unfamiliar with FreeBSD, and project will allow them not only install and setup a jail, but also Steam 
