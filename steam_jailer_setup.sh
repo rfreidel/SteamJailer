@@ -3,8 +3,8 @@
 # Steam Setup Script
 
 JAIL_NAME="steamjailer"
-STEAM_INSTALLER_URL="https://steamcdn-a.akamaihd.net/client/installer/steam.sh"
-STEAM_INSTALLER_PATH="/tmp/steam.sh"
+STEAM_INSTALLER_URL="https://cdn.fastly.steamstatic.com/client/installer/SteamSetup.exe"
+STEAM_INSTALLER_PATH="/tmp/Steam.exe"
 
 # Ensure the jail is running
 if ! iocage list | grep -q "^$JAIL_NAME.*up"; then
