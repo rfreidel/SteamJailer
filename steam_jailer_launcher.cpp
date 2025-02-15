@@ -72,7 +72,7 @@ void install_wine_proton() {
 // Function to install Steam in the jail
 void install_steam() {
     show_message("Installing Steam in Jail...");
-    run_command("sudo fetch -o /tmp/SteamSetup.exe https://cdn.akamai.steamstatic.com/client/installer/SteamSetup.exe");
+    run_command("sudo fetch -o /tmp/SteamSetup.exe https://cdn.fastly.steamstatic.com/client/installer/SteamSetup.exe");
     run_command("sudo iocage exec steamjailer WINE=/usr/local/wine-proton/bin/wine /tmp/SteamSetup.exe");
     show_message("Steam installation completed.");
 }
