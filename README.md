@@ -5,7 +5,7 @@ An ambitious multipart project uses iocache and custom c++ and shell to provide 
 Installs iocache configures and loads your jail, installs wine-proton, winetricks in a script that is commented, installs modules, and eventualy Steam using Posix compliant syntax I think, into the jail
 
 # Warning
-This project is very invasive, it not only installs a jail, jail manager, wine-proton, but also and eventually Steam
+This project is very invasive, it not only installs a jail manager, jail, wine-proton, but also and eventually Steam
 
 # Intention
 This projects intended purpose is to automate the installation of Steam within a jail on FreeBSD, including the installation of wine-proton both system-wide and within the jail. The project will also provide options to install necessary patches and enable `iocage` in the system's rc.conf. Finally, it will eventually offer the ability to link the launcher to the user's $HOME/bin folder with a default program icon for FreeBSD, I am mostly concerned at this time for posix compliance, stability, and function in the main part of project. 
@@ -23,6 +23,9 @@ iocage is a FreeBSD jail manager that simplifies the creation, management, and m
 
 ## What is SteamJailer?
 SteamJailer is a specific jail configuration designed to install Steam within a FreeBSD jail. It ensures that Steam operates in a contained environment, isolating it from the rest of the system for security and management purposes.
+
+## Modularity
+I have the thought throughout the building of this project that the project should be modular in that it will allow one to customize the install by only installing part, like whatif a user already has a jail installed and running? Well, I suppose I cannot get there yet, at this point the project will target those who are unfamiliar with FreeBSD, and project will allow them not only install and setup a jail, but also Steam 
 
 ## Example Steps to Interface with SteamJailer using iocage
 
