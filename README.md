@@ -12,7 +12,7 @@ This projects intended purpose is to automate the installation of Steam within a
 
 The project `jailer` provides an interface allowing control of Steam with-in the jail using zenity and c++ 
 
-    build instructions c++ package_name.cpp -o jailer
+    build instructions c++ package_name.cpp -o app_name
 
 It is beyond the scope of this project to provide a wine-proton capable of playing modern games, the current wine-proton in ports and packages is capable of playing SkyrimSE, Dark SoulsIII, Fallout4, etc. This project will grow depending on base package support
 
