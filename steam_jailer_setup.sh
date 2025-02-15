@@ -41,7 +41,7 @@ echo "Killing all Wine processes..."
 iocage exec $JAIL_NAME pkill wine
 
 # Notify user to launch Steam launcher
-echo "Steam installation complete. Please launch the Steam launcher to start Steam."
+echo "Steam installation complete. Please launch the Steam launcher `jailer' to start Steam."
 
 # Gracefully exit
 echo "Exiting setup script..."
