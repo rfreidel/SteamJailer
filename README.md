@@ -27,7 +27,7 @@ SteamJailer is a specific jail configuration designed to install Steam within a 
 
 ### 1. Install iocage (Project will do this for you)
 ```sh
-pkg install iocage
+pkg install py311-iocage
 
 2. Create a New Jail
 sh
