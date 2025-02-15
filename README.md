@@ -1,6 +1,6 @@
 # Project: Steam Jailer
 
-An ambitious multipart project uses iocache and custom c++ and shell to provide this function
+An ambitious multipart project uses iocache and custom c++ and shell to provide this function, project will continue to be developed so keep an eye out for release announcement
 
 Installs iocache configures and loads your jail, installs wine-proton, winetricks in a script that is commented, installs modules, and eventualy Steam using Posix compliant syntax I think, into the jail
 
