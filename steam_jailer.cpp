@@ -3,45 +3,55 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <stdexcept>  // For exceptions
+#include <cstdio>     // For FILE* and related functions
+#include <memory>    // For smart pointers
 
+// Function to run a command and check for errors
 void runCommand(const std::string &command) {
     std::cout << "Running command: " << command << std::endl;
     int result = std::system(command.c_str());
     if (result != 0) {
-        std::cerr << "Command failed: " << command << std::endl;
-        std::exit(result); // Exit on command failure to prevent further execution
+        std::cerr << "Command failed: " << command << ", exit code: " << result << std::endl;
+        throw std::runtime_error("Command failed: " + command + ", exit code: " + std::to_string(result)); // Throw exception
     }
 }
 
+// Function to execute a command and return its output as a vector of strings
+std::vector<std::string> executeAndGetOutput(const std::string& command) {
+    std::vector<std::string> outputLines;
+    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(command.c_str(), "r"), pclose); // Use unique_ptr for RAII
+    if (!pipe) {
+        throw std::runtime_error("popen() failed!");
+    }
+
+    char buffer[128];
+    while (fgets(buffer, sizeof buffer, pipe.get()) != nullptr) {
+        outputLines.emplace_back(buffer); // Add line to vector
+        outputLines.back().erase(outputLines.back().find_last_not_of(" \n\r\t") + 1); // Trim whitespace
+    }
+    return outputLines;
+}
+
+// Function to get available releases
 std::vector<std::string> getAvailableReleases() {
     std::vector<std::string> releases;
-    FILE* pipe = popen("iocage fetch -r | grep -Eo '^[0-9]+\\.[0-9]+-RELEASE'", "r");
-    if (!pipe) throw std::runtime_error("popen() failed!");
-    char buffer[128];
-    while (fgets(buffer, sizeof buffer, pipe) != nullptr) {
-        std::stringstream ss(buffer);
-        std::string release;
-        ss >> release;
-        releases.push_back(release);
+    std::vector<std::string> output = executeAndGetOutput("iocage fetch -r");
+    for (const auto& line : output) {
+        std::smatch match;
+        if (std::regex_search(line, match, std::regex("^[0-9]+\\.[0-9]+-RELEASE"))) {
+            releases.push_back(match.str());
+        }
     }
-    pclose(pipe);
     return releases;
 }
 
+// Function to get the network interface (excluding loopback)
 std::string getNetworkInterface() {
-    FILE* pipe = popen("ifconfig | grep 'flags=' | awk '{print $1}' | tr -d ':'", "r");
-    if (!pipe) throw std::runtime_error("popen() failed!");
-    char buffer[128];
     std::vector<std::string> interfaces;
-    while (fgets(buffer, sizeof buffer, pipe) != nullptr) {
-        std::stringstream ss(buffer);
-        std::string iface;
-        ss >> iface;
-        interfaces.push_back(iface);
-    }
-    pclose(pipe);
+    std::vector<std::string> output = executeAndGetOutput("ifconfig | grep 'flags=' | awk '{print $1}' | tr -d ':'");
 
-    for (const auto& iface : interfaces) {
+    for (const auto& iface : output) {
         if (iface.find("lo") == std::string::npos) {
             return iface;
         }
@@ -49,22 +59,18 @@ std::string getNetworkInterface() {
     return "lo0"; // default to loopback if no other interface found
 }
 
+// Function to get the IP address of a given interface
 std::string getIPAddress(const std::string& interface) {
-    FILE* pipe = popen(("ifconfig " + interface + " | grep 'inet6' | awk '{print $2}'").c_str(), "r");
-    if (!pipe) throw std::runtime_error("popen() failed!");
-    char buffer[128];
-    std::string ip;
-    while (fgets(buffer, sizeof buffer, pipe) != nullptr) {
-        std::stringstream ss(buffer);
-        ss >> ip;
+    std::vector<std::string> output = executeAndGetOutput("ifconfig " + interface + " | grep 'inet6' | awk '{print $2}'");
+    for (const auto& ip : output) {
         if (ip.find("fe80") != 0) { // ignore link-local addresses
-            break;
+            return ip;
         }
     }
-    pclose(pipe);
-    return ip.empty() ? "127.0.1.1" : ip;
+    return "127.0.1.1";
 }
 
+// Function to install iocage if it's not already installed
 void installIocage() {
     // Check if iocage is installed
     if (std::system("command -v iocage >/dev/null 2>&1") != 0) {
@@ -76,21 +82,25 @@ void installIocage() {
     }
 }
 
+// Function to activate iocage on the primary zpool
 void activateIocage() {
-    // Activate iocage on the primary zpool
     runCommand("sudo iocage activate zroot");
 }
 
+// Function to set up the jail
 void setupJail() {
     // Check if the jail already exists
-    if (std::system("sudo iocage get state steamjailer >/dev/null 2>&1") == 0) {
+    try {
+        runCommand("sudo iocage get state steamjailer >/dev/null 2>&1");
         std::cout << "Jail steamjailer already exists." << std::endl;
-    } else {
+    } catch (const std::runtime_error& e) {
+        // Jail does not exist, proceed with creation
+        std::cout << "Jail steamjailer does not exist. Creating..." << std::endl;
+
         // Get available releases
         std::vector<std::string> releases = getAvailableReleases();
         if (releases.empty()) {
-            std::cerr << "No available releases found!" << std::endl;
-            std::exit(1);
+            throw std::runtime_error("No available releases found!");
         }
 
         // Use the latest available release
@@ -113,26 +123,33 @@ void setupJail() {
     runCommand("sudo iocage fstab -a steamjailer procfs /proc procfs rw 0 0");
 }
 
+// Function to install necessary packages inside the jail
 void installPackages() {
     // Commands to install necessary packages
     runCommand("sudo iocage exec steamjailer pkg install -y wine-proton winetricks");
 }
 
 int main() {
-    std::cout << "Initializing jailer setup..." << std::endl;
+    try {
+        std::cout << "Initializing jailer setup..." << std::endl;
 
-    // Install iocage if not already installed
-    installIocage();
+        // Install iocage if not already installed
+        installIocage();
 
-    // Activate iocage
-    activateIocage();
+        // Activate iocage
+        activateIocage();
 
-    // Setup jail
-    setupJail();
+        // Setup jail
+        setupJail();
 
-    // Install packages
-    installPackages();
+        // Install packages
+        installPackages();
 
-    std::cout << "Jailer setup completed successfully." << std::endl;
-    return 0;
+        std::cout << "Jailer setup completed successfully." << std::endl;
+        return 0;
+
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        return 1;
+    }
 }
