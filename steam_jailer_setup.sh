@@ -22,7 +22,7 @@ iocage exec $JAIL_NAME sh -c "WINE=/usr/local/wine-proton/bin/wine winetricks --
 
 # Use Winetricks to install required components for Steam
 echo "Installing required components for Steam..."
-iocage exec $JAIL_NAME sh -c "WINE=/usr/local/wine-proton/bin/wine winetricks vcrun2022 dxvk"
+iocage exec $JAIL_NAME sh -c "WINE=/usr/local/wine-proton/bin/wine winetricks cmd vcrun2022 dxvk nvapi"
 
 # Download Steam installer
 echo "Downloading Steam installer..."
