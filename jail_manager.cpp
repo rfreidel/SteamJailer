@@ -1,140 +1,43 @@
-#include "jail_manager.hpp"
-#include "FreeBSD.hpp"
-#include <iostream>
-#include <stdexcept>
-#include <array>
-#include <cstdio>
-#include <string>
-#include <unistd.h>
-
-// Existing methods...
-
-std::string JailManager::getSystemVersion() {
-    return executeCommand(FreeBSD::CMD_FREEBSD_VERSION);
-}
-
-bool JailManager::isRunning() {
-    std::string cmd = std::string(FreeBSD::CMD_JLS) + " -j " + 
-                      FreeBSD::JAIL_NAME + " >/dev/null 2>&1";
-    return system(cmd.c_str()) == 0;
-}
-
-bool JailManager::exists() {
-    std::string cmd = std::string(FreeBSD::CMD_IOCAGE) + " list | " + 
-                      FreeBSD::CMD_GREP + " -q " + FreeBSD::JAIL_NAME;
-    return system(cmd.c_str()) == 0;
-}
-
-bool JailManager::startJail() {
-    if (!exists()) {
-        std::cerr << "Jail does not exist" << std::endl;
-        return false;
-    }
-
-    try {
-        if (isRunning()) {
-            std::cout << "Jail is already running" << std::endl;
-            return true;
-        }
-
-        // Clean stop any existing instance
-        std::string stop_cmd = std::string(FreeBSD::CMD_IOCAGE) + " stop " + 
-                              FreeBSD::JAIL_NAME + " >/dev/null 2>&1 || true";
-        system(stop_cmd.c_str());
-        
-        // Wait for stop
-        for (int i = 0; i < 5 && isRunning(); i++) {
-            sleep(1);
-        }
-
-        std::cout << "Starting jail..." << std::endl;
-        runCommand(std::string(FreeBSD::CMD_IOCAGE) + " start " + FreeBSD::JAIL_NAME);
-
-        // Wait for jail to initialize
-        for (int i = 0; i < 10; i++) {
-            std::cout << "Waiting for jail to initialize... (" << (i+1) << "/10)" << std::endl;
-            
-            if (isRunning() && 
-                verifyJailService("/usr/bin/true") && 
-                verifyJailService(FreeBSD::CMD_PKG + std::string(" -N"))) {
-                std::cout << "Jail startup confirmed" << std::endl;
-                return true;
-            }
-            sleep(1);
-        }
-
-        throw std::runtime_error("Jail failed to start properly");
-    } catch (const std::exception& e) {
-        std::cerr << "Error starting jail: " << e.what() << std::endl;
-        return false;
-    }
-}
-
-bool JailManager::stopJail() {
-    if (!exists()) {
-        std::cerr << "Jail does not exist" << std::endl;
-        return false;
-    }
-
-    try {
-        if (!isRunning()) {
-            std::cout << "Jail is not running" << std::endl;
-            return true;
-        }
-
-        std::cout << "Stopping jail..." << std::endl;
-        runCommand(std::string(FreeBSD::CMD_IOCAGE) + " stop " + FreeBSD::JAIL_NAME);
-
-        // Wait for stop
-        for (int i = 0; i < 5 && isRunning(); i++) {
-            sleep(1);
-        }
-
-        if (isRunning()) {
-            std::cerr << "Warning: Using force stop" << std::endl;
-            runCommand(std::string(FreeBSD::CMD_IOCAGE) + " stop -f " + FreeBSD::JAIL_NAME);
-            sleep(2);
-        }
-
-        return !isRunning();
-    } catch (const std::exception& e) {
-        std::cerr << "Error stopping jail: " << e.what() << std::endl;
-        return false;
-    }
-}
-
 bool JailManager::createJail(const std::string& version) {
-    if (exists()) {
-        std::cout << "Jail already exists" << std::endl;
+    // Check if jail exists first
+    std::string check_cmd = std::string("/usr/local/bin/iocage list | /usr/bin/grep -q ") + 
+                           FreeBSD::JAIL_NAME;
+    if (system(check_cmd.c_str()) == 0) {
+        std::cout << "Jail already exists\n";
         return true;
     }
 
     try {
-        std::string interface = getNetworkInterface();
-        
-        // Fetch FreeBSD release
-        runCommand(std::string(FreeBSD::CMD_IOCAGE) + " fetch release=" + version);
-        
-        // Create jail with proper network configuration
-        std::string create_cmd = std::string(FreeBSD::CMD_IOCAGE) + 
-            " create -r " + version +
+        // Get default interface
+        std::string iface = executeCommand("/usr/bin/netstat -f inet -rn | /usr/bin/grep -w default | /usr/bin/awk '{print $6}'");
+        if (iface.empty()) {
+            throw std::runtime_error("Could not determine default interface");
+        }
+
+        // Create jail with proper FreeBSD POSIX syntax
+        std::string create_cmd = std::string("/usr/local/bin/iocage create") +
+            " -r " + version +
             " -n " + FreeBSD::JAIL_NAME +
-            " ip4_addr=\"" + interface + "|" + FreeBSD::DEFAULT_JAIL_IP + "/24\"" +
+            " ip4_addr=\"" + iface + "|" + FreeBSD::DEFAULT_JAIL_IP + "/24\"" +
             " allow_raw_sockets=1" +
             " boot=on" +
-            " allow_mlock=1" +  // Allow memory locking for Steam
-            " sysvmsg=new" +    // System V IPC for Wine
+            " allow_mlock=1" +
+            " sysvmsg=new" +
             " sysvsem=new" +
             " sysvshm=new";
         
         runCommand(create_cmd);
 
-        // Configure jail mounts
-        runCommand(std::string(FreeBSD::CMD_IOCAGE) + " fstab -a " + 
-                  FreeBSD::JAIL_NAME + " devfs /dev devfs rw 0 0");
-        runCommand(std::string(FreeBSD::CMD_IOCAGE) + " fstab -a " + 
-                  FreeBSD::JAIL_NAME + " procfs /proc procfs rw 0 0");
-        
+        // Mount required filesystems
+        runCommand("/usr/local/bin/iocage fstab -a " + std::string(FreeBSD::JAIL_NAME) + 
+                  " devfs /dev devfs rw 0 0");
+
+        // Create steam user in jail
+        std::string add_user = "/usr/local/bin/iocage exec " + std::string(FreeBSD::JAIL_NAME) + 
+                              " /usr/sbin/pw useradd " + FreeBSD::JAIL_USER +
+                              " -m -G " + FreeBSD::JAIL_GROUP;
+        runCommand(add_user);
+
         return true;
     } catch (const std::exception& e) {
         std::cerr << "Error creating jail: " << e.what() << std::endl;
@@ -142,23 +45,68 @@ bool JailManager::createJail(const std::string& version) {
     }
 }
 
-std::string JailManager::getNetworkInterface() {
-    // Get the first non-loopback interface
-    std::string cmd = std::string(FreeBSD::CMD_IFCONFIG) + " -l | " + 
-                      FreeBSD::CMD_GREP + " -v '^lo'";
-    std::string result = executeCommand(cmd);
-    
-    // Get first word (interface name)
-    size_t pos = result.find_first_of(" \t\n\r");
-    if (pos != std::string::npos) {
-        result = result.substr(0, pos);
+void JailManager::installSteam() {
+    if (!isRunning()) {
+        throw std::runtime_error("Jail must be running to install Steam");
     }
-    
-    if (result.empty()) {
-        throw std::runtime_error("No suitable network interface found");
+
+    try {
+        // Install wine-proton and winetricks in jail
+        std::string pkg_cmd = "/usr/local/bin/iocage exec " + std::string(FreeBSD::JAIL_NAME) +
+                             " /usr/sbin/pkg install -y wine-proton winetricks";
+        runCommand(pkg_cmd);
+
+        // Initialize wine for steam user
+        std::string wine_init = "/usr/local/bin/iocage exec -U " + 
+                               std::string(FreeBSD::JAIL_USER) + " " +
+                               FreeBSD::JAIL_NAME + " /usr/bin/env " +
+                               "HOME=/home/" + FreeBSD::JAIL_USER + " " +
+                               "WINEPREFIX=/home/" + FreeBSD::JAIL_USER + "/.wine " +
+                               "/usr/local/wine-proton/bin/wine wineboot --init";
+        runCommand(wine_init);
+
+        // Download Steam installer
+        std::string fetch_cmd = "/usr/local/bin/iocage exec -U " +
+                               std::string(FreeBSD::JAIL_USER) + " " +
+                               FreeBSD::JAIL_NAME + " /usr/bin/fetch -o " +
+                               "/home/" + FreeBSD::JAIL_USER + "/SteamSetup.exe " +
+                               FreeBSD::STEAM_INSTALLER;
+        runCommand(fetch_cmd);
+
+        // Install Steam
+        std::string install_cmd = "/usr/local/bin/iocage exec -U " +
+                                std::string(FreeBSD::JAIL_USER) + " " +
+                                FreeBSD::JAIL_NAME + " /usr/bin/env " +
+                                "HOME=/home/" + FreeBSD::JAIL_USER + " " +
+                                "WINEPREFIX=/home/" + FreeBSD::JAIL_USER + "/.wine " +
+                                "/usr/local/wine-proton/bin/wine " +
+                                "/home/" + FreeBSD::JAIL_USER + "/SteamSetup.exe /S";
+        runCommand(install_cmd);
+
+        // Cleanup
+        std::string cleanup = "/usr/local/bin/iocage exec " + 
+                            std::string(FreeBSD::JAIL_NAME) +
+                            " /bin/rm -f /home/" + FreeBSD::JAIL_USER + "/SteamSetup.exe";
+        runCommand(cleanup);
+
+        std::cout << "Steam installation completed successfully!\n";
+    } catch (const std::exception& e) {
+        throw std::runtime_error(std::string("Steam installation failed: ") + e.what());
     }
-    
-    return result;
 }
 
-// ... rest of the implementation remains the same
+bool JailManager::isRunning() {
+    std::string check_cmd = "/usr/sbin/jls -N | /usr/bin/grep -q " + 
+                           std::string(FreeBSD::JAIL_NAME);
+    return system(check_cmd.c_str()) == 0;
+}
+
+bool JailManager::startJail() {
+    if (isRunning()) {
+        return true;
+    }
+
+    std::string start_cmd = "/usr/local/bin/iocage start " + 
+                           std::string(FreeBSD::JAIL_NAME);
+    return system(start_cmd.c_str()) == 0;
+}

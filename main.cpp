@@ -1,31 +1,35 @@
-#include "jail_manager.hpp"
-#include "FreeBSD.hpp"
-#include <iostream>
-#include <string>
-#include <unistd.h>
-
 int main() {
     try {
         // Check if running as root
-        std::string id_output = JailManager::executeCommand(FreeBSD::CMD_ID + std::string(" -u"));
-        if (id_output != "0\n" && id_output != "0") {
-            throw std::runtime_error("This program must be run as root.\n"
-                                   "Please use 'su -' to become root first.");
+        if (system("/usr/bin/id -u | /usr/bin/grep -q '^0$'") != 0) {
+            throw std::runtime_error("This program must be run as root");
         }
 
-        // Display system information
-        std::cout << "Current Date and Time (UTC - YYYY-MM-DD HH:MM:SS formatted): " 
-                  << JailManager::executeCommand(FreeBSD::CMD_DATE) << std::endl;
-        
-        std::cout << "Current User's Login: " 
-                  << JailManager::executeCommand(FreeBSD::CMD_ID_USER) << std::endl;
+        // Enable iocage
+        system("/usr/sbin/sysrc -q iocage_enable=\"YES\"");
+        system("/usr/sbin/service iocage onestart");
 
-        // Get FreeBSD version
+        // Create and start jail
         std::string version = JailManager::getSystemVersion();
-        std::cout << "FreeBSD Version: " << version << std::endl;
+        if (!JailManager::exists() && !JailManager::createJail(version)) {
+            throw std::runtime_error("Failed to create jail");
+        }
 
-        // Rest of the implementation...
-        
+        if (!JailManager::isRunning() && !JailManager::startJail()) {
+            throw std::runtime_error("Failed to start jail");
+        }
+
+        // Install Steam
+        JailManager::installSteam();
+
+        std::cout << "\nTo launch Steam, use:\n"
+                  << "/usr/local/bin/iocage exec -U " << FreeBSD::JAIL_USER 
+                  << " " << FreeBSD::JAIL_NAME 
+                  << " /usr/bin/env HOME=/home/" << FreeBSD::JAIL_USER 
+                  << " WINEPREFIX=/home/" << FreeBSD::JAIL_USER << "/.wine "
+                  << "/usr/local/wine-proton/bin/wine"
+                  << " ~/.wine/drive_c/Program\\ Files\\ \\(x86\\)/Steam/Steam.exe\n";
+
         return 0;
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
