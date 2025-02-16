@@ -1,0 +1,26 @@
+{
+    "repository": "https://pkg.freebsd.org/FreeBSD:14:amd64/latest",
+    "pkgs": [
+        "wine-proton",
+        "winetricks",
+        "ca_root_nss",
+        "liberation-fonts-ttf",
+        "wine-gecko",
+        "wine-mono"
+    ],
+    "winetricks": [
+        "d3dx9",
+        "d3dx10",
+        "d3dx11",
+        "vcrun2019",
+        "dotnet48",
+        "corefonts",
+        "dxvk",
+        "nvapi"
+    ],
+    "env": {
+        "WINE": "/usr/local/wine-proton/bin/wine",
+        "WINEPREFIX": "${HOME}/.wine",
+        "WINEARCH": "win64"
+    }
+}
