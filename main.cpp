@@ -1,34 +1,53 @@
 int main() {
     try {
-        // Check if running as root
+        // Check root privileges
         if (system("/usr/bin/id -u | /usr/bin/grep -q '^0$'") != 0) {
             throw std::runtime_error("This program must be run as root");
         }
 
-        // Enable iocage
-        system("/usr/sbin/sysrc -q iocage_enable=\"YES\"");
-        system("/usr/sbin/service iocage onestart");
+        // Get current time
+        std::cout << "Current Date and Time (UTC): " 
+                  << JailManager::executeCommand("/bin/date -u \"+%Y-%m-%d %H:%M:%S\"");
 
-        // Create and start jail
+        // Get current user
+        std::cout << "Current User: " 
+                  << JailManager::executeCommand("/usr/bin/whoami");
+
+        // Get FreeBSD version
         std::string version = JailManager::getSystemVersion();
-        if (!JailManager::exists() && !JailManager::createJail(version)) {
-            throw std::runtime_error("Failed to create jail");
+        std::cout << "FreeBSD Version: " << version;
+
+        // Create jail if it doesn't exist
+        if (!JailManager::checkJail()) {
+            if (!JailManager::createJail(version)) {
+                throw std::runtime_error("Failed to create jail");
+            }
         }
 
-        if (!JailManager::isRunning() && !JailManager::startJail()) {
-            throw std::runtime_error("Failed to start jail");
+        // Start jail if not running
+        if (!JailManager::isRunning()) {
+            std::cout << "Starting jail...\n";
+            if (!JailManager::startJail()) {
+                throw std::runtime_error("Failed to start jail");
+            }
         }
 
-        // Install Steam
-        JailManager::installSteam();
-
-        std::cout << "\nTo launch Steam, use:\n"
-                  << "/usr/local/bin/iocage exec -U " << FreeBSD::JAIL_USER 
+        std::cout << "\nJail setup completed successfully!\n";
+        std::cout << "To install Steam, run:\n";
+        std::cout << "/usr/local/bin/iocage exec -U " << FreeBSD::JAIL_USER 
                   << " " << FreeBSD::JAIL_NAME 
-                  << " /usr/bin/env HOME=/home/" << FreeBSD::JAIL_USER 
-                  << " WINEPREFIX=/home/" << FreeBSD::JAIL_USER << "/.wine "
-                  << "/usr/local/wine-proton/bin/wine"
-                  << " ~/.wine/drive_c/Program\\ Files\\ \\(x86\\)/Steam/Steam.exe\n";
+                  << " /usr/bin/env WINEPREFIX=/home/" << FreeBSD::JAIL_USER 
+                  << "/.wine /usr/local/wine-proton/bin/wine wineboot --init\n\n";
+        std::cout << "Then download and install Steam:\n";
+        std::cout << "/usr/local/bin/iocage exec -U " << FreeBSD::JAIL_USER 
+                  << " " << FreeBSD::JAIL_NAME 
+                  << " /usr/bin/fetch -o /home/" << FreeBSD::JAIL_USER 
+                  << "/SteamSetup.exe " << FreeBSD::STEAM_INSTALLER << "\n\n";
+        std::cout << "/usr/local/bin/iocage exec -U " << FreeBSD::JAIL_USER 
+                  << " " << FreeBSD::JAIL_NAME 
+                  << " /usr/bin/env WINEPREFIX=/home/" << FreeBSD::JAIL_USER 
+                  << "/.wine /usr/local/wine-proton/bin/wine /home/" 
+                  << FreeBSD::JAIL_USER << "/SteamSetup.exe /S\n";
 
         return 0;
     } catch (const std::exception& e) {
