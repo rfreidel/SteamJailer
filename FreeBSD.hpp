@@ -1,23 +1,24 @@
 #ifndef FREEBSD_HPP
 #define FREEBSD_HPP
 
-// FreeBSD standard command paths
-const char* const CMD_PKG = "/usr/sbin/pkg";
-const char* const CMD_IOCAGE = "/usr/local/bin/iocage";
-const char* const CMD_IFCONFIG = "/sbin/ifconfig";
-const char* const CMD_SERVICE = "/usr/sbin/service";
-const char* const CMD_SYSRC = "/usr/sbin/sysrc";
-const char* const CMD_ZFS = "/sbin/zfs";
-const char* const CMD_MOUNT = "/sbin/mount";
-const char* const CMD_FETCH = "/usr/bin/fetch";
-const char* const CMD_GREP = "/usr/bin/grep";
-const char* const CMD_AWK = "/usr/bin/awk";
-const char* const CMD_SED = "/usr/bin/sed";
-const char* const CMD_WINE = "/usr/local/wine-proton/bin/wine";
-const char* const CMD_WINETRICKS = "/usr/local/bin/winetricks";
-const char* const CMD_FREEBSD_VERSION = "/bin/freebsd-version";
+#include <string>
 
-// Steam installer URL
-const char* const STEAM_INSTALLER = "https://cdn.cloudflare.steamstatic.com/client/installer/SteamSetup.exe";
+namespace FreeBSD {
+    // FreeBSD standard command paths
+    constexpr const char* CMD_PKG = "/usr/sbin/pkg";
+    constexpr const char* CMD_IOCAGE = "/usr/local/bin/iocage";
+    constexpr const char* CMD_IFCONFIG = "/sbin/ifconfig";
+    constexpr const char* CMD_WINE = "/usr/local/bin/wine";
+    constexpr const char* CMD_WINETRICKS = "/usr/local/bin/winetricks";
+    constexpr const char* CMD_FREEBSD_VERSION = "/bin/freebsd-version";
+    constexpr const char* CMD_FETCH = "/usr/bin/fetch";
+    constexpr const char* CMD_AWK = "/usr/bin/awk";
+    constexpr const char* CMD_GREP = "/usr/bin/grep";
+    
+    // Default values
+    constexpr const char* STEAM_INSTALLER = "https://cdn.cloudflare.steamstatic.com/client/installer/SteamSetup.exe";
+    constexpr const char* DEFAULT_JAIL_IP = "127.0.1.1";
+    constexpr const char* JAIL_NAME = "steamjail";
+}
 
 #endif // FREEBSD_HPP

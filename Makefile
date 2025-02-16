@@ -1,8 +1,7 @@
 CXX = c++
-CXXFLAGS = -Wall -Wextra -std=c++17 -O2 -I/usr/include/c++/v1
-LDFLAGS =
+CXXFLAGS = -Wall -Wextra -std=c++17 -O2 -I/usr/include/c++/v1 -I.
 
-SRCS = main.cpp iocage_installer.cpp
+SRCS = main.cpp jail_manager.cpp
 OBJS = $(SRCS:.cpp=.o)
 TARGET = installer
 
@@ -11,7 +10,7 @@ TARGET = installer
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CXX) $(OBJS) -o $(TARGET) $(LDFLAGS)
+	$(CXX) $(OBJS) -o $(TARGET)
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@

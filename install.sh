@@ -19,8 +19,7 @@ fi
     winetricks
 
 # Compile the installer
-make clean
-make
+make clean && make
 
 # Set permissions
 chmod 755 ./installer
