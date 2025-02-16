@@ -7,13 +7,13 @@
 const char* CMD_DATE = "/bin/date";
 const char* CMD_WHOAMI = "/usr/bin/whoami";
 const char* CMD_UNAME = "/usr/bin/uname";
-const char* CMD_SED = "/usr/bin/sed";
+const char* CMD_SED = "/usr/bin/sed";\
 const char* CMD_ECHO = "/bin/echo";
 
 int main() {
     // Get FreeBSD version without -p1/-P1 suffix
     std::string cmd = std::string(CMD_UNAME) + " -r | " + 
-                     CMD_SED + " -e 's/-p[0-9]$//' -e 's/-P[0-9]$//'";
+                     CMD_SED + " -e 's/-[pP][0-9]$//'";
     
     FILE* fp = popen(cmd.c_str(), "r");
     if (!fp) {
@@ -70,5 +70,6 @@ int main() {
          << "}\n";
 
     json.close();
+    std::cout << "Created packages.json configuration file\n";
     return 0;
 }
