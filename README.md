@@ -10,13 +10,17 @@ Installs iocache configures and loads your jail, installs wine-proton, winetrick
 
     another tmp     
      This is just first
-     ./
-     ├── FreeBSD.hpp
-     ├── iocage_installer.hpp
-     ├── iocage_installer.cpp
-     ├── main.cpp
-     ├── Makefile
-     └── install.sh
+     ..
+      ├── build.sh
+      ├── include/
+      │   ├── FreeBSD.hpp       # FreeBSD POSIX commands and settings
+      │   ├── jail_manager.hpp  # Jail management functions
+      │   └── system_info.hpp   # System information functions
+      ├── src/
+      │   ├── main.cpp          # Main program
+      │   ├── jail_manager.cpp  # Jail manager implementation
+      │   └── system_info.cpp   # System info implementation
+      └── build/               # Build output directory
      
 
 I am building this project with proper defines anyone who wishes to adopt this project folliwing my announcement is more than welcome to fork this project and improve it should via the defines adapt it to just about anything, I am pleased to get this code out of my head and onto the Internet
