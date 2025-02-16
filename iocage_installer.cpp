@@ -1,5 +1,3 @@
-#include "iocage_installer.hpp"
-
 bool isRoot() {
     return (geteuid() == 0);
 }
