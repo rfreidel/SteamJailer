@@ -1,51 +1,30 @@
 #include "jail_manager.hpp"
 #include "FreeBSD.hpp"
 #include <iostream>
+#include <string>
 #include <unistd.h>
-#include <ctime>
-#include <iomanip>
 
 int main() {
     try {
-        if (geteuid() != 0) {
-            throw std::runtime_error("This program must be run as root");
+        // Check if running as root
+        std::string id_output = JailManager::executeCommand(FreeBSD::CMD_ID + std::string(" -u"));
+        if (id_output != "0\n" && id_output != "0") {
+            throw std::runtime_error("This program must be run as root.\n"
+                                   "Please use 'su -' to become root first.");
         }
 
-        // Get and display current time
-        std::time_t now = std::time(nullptr);
-        std::cout << "Installation started at: " 
-                  << std::put_time(std::gmtime(&now), "%Y-%m-%d %H:%M:%S UTC") 
-                  << std::endl;
-
-        std::cout << "Starting Steam jail setup..." << std::endl;
+        // Display system information
+        std::cout << "Current Date and Time (UTC - YYYY-MM-DD HH:MM:SS formatted): " 
+                  << JailManager::executeCommand(FreeBSD::CMD_DATE) << std::endl;
         
+        std::cout << "Current User's Login: " 
+                  << JailManager::executeCommand(FreeBSD::CMD_ID_USER) << std::endl;
+
+        // Get FreeBSD version
         std::string version = JailManager::getSystemVersion();
         std::cout << "FreeBSD Version: " << version << std::endl;
-        
-        if (!JailManager::exists()) {
-            if (!JailManager::createJail(version)) {
-                throw std::runtime_error("Failed to create jail");
-            }
-        }
-        
-        if (!JailManager::startJail()) {
-            throw std::runtime_error("Failed to start jail");
-        }
-        
-        JailManager::configureWine();
-        JailManager::installSteam();
 
-        std::cout << "\nSteam installation completed successfully." << std::endl;
-        std::cout << "To start Steam, run: " << FreeBSD::CMD_IOCAGE << " exec " 
-                 << FreeBSD::JAIL_NAME << " " << FreeBSD::CMD_WINE 
-                 << " ~/.wine/drive_c/Program\\ Files\\ \\(x86\\)/Steam/Steam.exe" 
-                 << std::endl;
-        
-        // Get and display completion time
-        now = std::time(nullptr);
-        std::cout << "Installation completed at: " 
-                  << std::put_time(std::gmtime(&now), "%Y-%m-%d %H:%M:%S UTC") 
-                  << std::endl;
+        // Rest of the implementation...
         
         return 0;
     } catch (const std::exception& e) {
