@@ -4,14 +4,15 @@ An ambitious multipart project uses iocache and custom c++ and shell to provide 
 
 Installs iocache configures and loads your jail, installs wine-proton, winetricks in a script that is commented, installs modules, and eventualy Steam using Posix compliant syntax I think, into the jail
 
-###temp
+    temp
+     sh
+     as superuser ./installer 
+
+    another tmp     
+     This is just first
      
 
-bash
-
-sudo ./installer --build  # For buildworld
-# or
-sudo ./installer         # For normal jail setup
+I am building this project with proper defines anyone who wishes to adopt this project folliwing my announcement is more than welcome to fork this project and improve it should via the defines adapt it to just about anything, I am pleased to get this code out of my head and onto the Internet
 
 # Warning
 This project is very invasive, it not only installs a jail manager, jail, wine-proton, but also and eventually Steam
