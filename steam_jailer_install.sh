@@ -10,6 +10,7 @@ echo "Setting up Steam Jailer..."
 
 # Step 2: Install Wine-Proton and Winetricks inside the jail
 echo "Running Steam setup..."
-./steam_jailer_setup.sh
+c++ steamjailerInstaller.cpp -o jailer
+./jailer
 
 echo "Installation complete. Thanks for all the pizza!"
