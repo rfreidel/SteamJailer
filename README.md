@@ -44,5 +44,6 @@ It did this without further instructions, this was the result: https://github.co
 
 previous attempts were using FreeBSD ports and packages jail installers, this projects current state, I began this project with Bastille, then each attempt to install was met with error, then switched to iocage, while using iocage a Steam install would successfully occur perhaps once every two attempts, this was not up to my standards, so switched to ezjail, then back ad forth, each attempt is using, I believe some of the issue I was experiencing was the use of third party apps
 
-Currently new re-build utilizes the same FreeBSD POSIX sytax the AI now knows better than I do on the third day of interaction.
+Currently new re-build utilizes the same FreeBSD POSIX syntax though has dropped third party apps for the jail install, the AI now knows how  to code better than I do on the third day of interaction.
+
 Executes FreeBSD with POSIX syntax via shell script which will then be exported to c++ POSIX
