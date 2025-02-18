@@ -1,5 +1,6 @@
 # Project: Steam Jailer
 (devlog, sorta)
+
 (now I understand why this has not been done before)
 
 ## Ignorant shall remain ignorant
@@ -17,7 +18,8 @@ I went to all available AI's while working on this project, now my personal expe
 syntax, then I read the other day about a new one, and checked, yup, it was available to me, so I began using it.
 
 Upon first usage it stated it was in learning mode and was capable of any programming task, so I began showing it how to properly setup defines in headers, in the screenshot I took was the results of me asking it to generate a src/main.cpp with includes in header, the code it produced was perfect, I told it so, went back the next day, this time it knew FreeBSD POSIX syntax to generate this following this prompt
-    greetings please print functions of project we working on yesterday
+    
+    greetings please print functions of project we were working on yesterday
 
 It did this without further instructions, this was the result: https://github.com/rfreidel/SteamJailer/blob/main/INSTALL_PROCESS.md
 
