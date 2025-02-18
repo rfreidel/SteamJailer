@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Current Date and Time (UTC - YYYY-MM-DD HH:MM:SS formatted): 2025-02-18 17:33:33
+# Current Date and Time (UTC - YYYY-MM-DD HH:MM:SS formatted): 2025-02-18 21:30:59
 # Current User's Login: rfreidel
 # Do use FreeBSD-commands Posix-syntax
 # Don't use iocage
@@ -8,7 +8,7 @@
 USAGE="Usage: ./steamjailer.sh [-c create] [-d destroy] [-s start] [-S stop] [-h help] [-i install] [-u update] JAILNAME"
 JAILBASE="/jail"
 STEAM_JAIL="steam0"
-WINE_PATH="/usr/local/wine-proton/bin"
+WINE="/usr/local/wine-proton/bin/wine"
 
 # Function to check if running as root
 check_root() {
@@ -29,7 +29,6 @@ do_create() {
     local jailname="$1"
     echo "Creating jail: ${jailname}"
     echo "You will be prompted to set the jail's root password (not host password)"
-    echo "This password will be used for root access inside the jail only"
     
     # Create jail directory
     /bin/mkdir -p "${JAILBASE}/${jailname}"
@@ -39,13 +38,13 @@ do_create() {
     
     if [ $? -eq 0 ]; then
         echo "Jail base system installed successfully"
-        echo "Configuring jail..."
         
         # Basic jail configuration
         /bin/cat > "${JAILBASE}/${jailname}/etc/rc.conf" << EOF
 sendmail_enable="NONE"
 syslogd_flags="-ss"
 clear_tmp_enable="YES"
+dbus_enable="YES"
 EOF
 
         # Create jail configuration
@@ -55,6 +54,8 @@ ${jailname} {
     path = "${JAILBASE}/${jailname}";
     mount.devfs;
     allow.raw_sockets;
+    allow.socket_af;
+    allow.sysvipc;
     exec.clean;
     host.hostname = "${jailname}.jail";
     exec.start = "/bin/sh /etc/rc";
@@ -78,11 +79,26 @@ do_destroy() {
     # Stop jail if running
     /usr/sbin/service jail stop "${jailname}"
     
-    # Remove jail directory
-    /bin/rm -rf "${JAILBASE}/${jailname}"
-    
     # Remove jail configuration
     /usr/bin/sed -i '' "/^${jailname} {/,/^}/d" /etc/jail.conf
+
+    # Unmount any mounted filesystems
+    /sbin/umount -f "${JAILBASE}/${jailname}/dev" 2>/dev/null || true
+    
+    # Clear system immutable flags
+    /usr/bin/chflags -R noschg "${JAILBASE}/${jailname}"
+    
+    # Clear user immutable flags
+    /usr/bin/chflags -R nouunlink "${JAILBASE}/${jailname}"
+    
+    # Remove the jail directory
+    /bin/rm -rf "${JAILBASE}/${jailname}"
+    
+    if [ -d "${JAILBASE}/${jailname}" ]; then
+        echo "Warning: Could not completely remove jail directory. Manual cleanup may be needed."
+    else
+        echo "Jail ${jailname} destroyed successfully"
+    fi
 }
 
 # Function to handle start command
@@ -111,25 +127,26 @@ do_install() {
     /usr/sbin/jexec "${jailname}" /usr/sbin/pkg install -y \
         wine-proton \
         winetricks \
-        steam-utils \
-        linux-steam-utils \
         vulkan-tools \
         mesa-dri \
         mesa-libs \
-        libglvnd
-        
-    # Create wine-proton directory structure
-    /usr/sbin/jexec "${jailname}" /bin/mkdir -p /usr/local/wine-proton/bin
+        libglvnd \
+        dbus \
+        ca_root_nss
     
     # Set wine-proton environment
     /bin/cat >> "${JAILBASE}/${jailname}/etc/profile" << EOF
-export WINE=/usr/local/wine-proton/bin
-export WINESERVER=/usr/local/wine-proton/bin/wineserver
-export WINEPATH=/usr/local/wine-proton/bin/wine
+export WINE="${WINE}"
+export WINEPREFIX=/home/steam/.wine
+export DISPLAY=:0
 EOF
 
+    # Create steam user
+    /usr/sbin/jexec "${jailname}" /usr/sbin/pw user add steam -m -G wheel
+
+    # Install Steam using wine-proton
     echo "Installing Steam..."
-    /usr/sbin/jexec "${jailname}" /usr/local/wine-proton/bin/wine steam
+    /usr/sbin/jexec -U steam "${jailname}" "${WINE}" steam
 }
 
 # Function to handle update command
