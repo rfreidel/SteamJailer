@@ -3,6 +3,25 @@
 
 (now I understand why this has not been done before)
 
+## Test process
+
+In its current state the project is s shell script which upon successful stability and function I will export to c++ upon proof of stability, the project has developed into a general purpose jail setup which the following will hopefully explain
+
+	# Create a new jail
+	$ sudo ./steamjailer.sh -c steamjail
+
+	# Start the jail
+	$ sudo ./steamjailer.sh -s steamjail
+
+	# Install Steam
+	$ sudo ./steamjailer.sh -i steamjail
+
+	# Destroy Jail
+	$ sudo ./steamjailer.sh -d steamjail
+	
+
+Code not quite there yet, but very close following teaching an AI POSIX syntax
+
 ## Ignorant shall remain ignorant
 
 Yet, I shall continue to build this project, no amount of denial for my statements to be truthful or honest will effect my desire to produce an automatic Steamjail installer
