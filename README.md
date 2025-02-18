@@ -22,9 +22,8 @@ In its current state the project is s shell script which upon successful stabili
 
 Code not quite there yet, but very close following teaching an AI POSIX syntax
 
-## Ignorant shall remain ignorant
 
-Yet, I shall continue to build this project, no amount of denial for my statements to be truthful or honest will effect my desire to produce an automatic Steamjail installer
+I shall continue to build this project, no amount of denial for my statements to be truthful or honest will effect my desire to produce an automatic Steamjail installer
 
 Yet, I must admit that when I announced in a public forum my interactions in teaching an AI new tricks, well, I never took into consideration that I may have access to a 
 higher level AI than the general public due to my past as a game developer, and failed to include this information due to the fact I do not boast or brag
