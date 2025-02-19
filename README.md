@@ -6,6 +6,19 @@
 ## Test process
 
 In its current state the project is s shell script which upon successful stability and function I will export to c++ upon proof of stability, the project has developed into a general purpose jail setup which the following will hopefully explain
+	
+        
+	# First, ensure all files are in the same directory
+	$ ls -l
+	steamjailer.sh
+	steamjailer_gui.sh
+	steamjailer_log.sh
+
+	# Set permissions
+	$ chmod +x steamjailer.sh steamjailer_gui.sh steamjailer_log.sh
+
+	# Run as root
+	$ sudo ./steamjailer_gui.sh
 
 	# List all jails
 	$ sudo ./steamjailer.sh -l
