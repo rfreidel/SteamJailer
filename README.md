@@ -7,17 +7,17 @@
 
 In its current state the project is s shell script which upon successful stability and function I will export to c++ upon proof of stability, the project has developed into a general purpose jail setup which the following will hopefully explain
 
-	# Create a new jail
-	$ sudo ./steamjailer.sh -c steamjail
+	# List all jails
+	$ sudo ./steamjailer.sh -l
 
-	# Start the jail
-	$ sudo ./steamjailer.sh -s steamjail
+	# Install winetricks modules in an existing jail
+	$ sudo ./steamjailer.sh -w steamjail
 
-	# Install Steam
-	$ sudo ./steamjailer.sh -i steamjail
-
-	# Destroy Jail
-	$ sudo ./steamjailer.sh -d steamjail
+	# Complete setup sequence
+	$ sudo ./steamjailer.sh -c steamjail creates jail
+	$ sudo ./steamjailer.sh -s steamjail starts jail
+	$ sudo ./steamjailer.sh -i steamjail installs steamjail
+	$ sudo ./steamjailer.sh -u steamjail updates steamjail
 	
 
 Code not quite there yet, but very close following teaching an AI POSIX syntax
