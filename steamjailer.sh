@@ -1,16 +1,15 @@
 #!/bin/sh
 
-# Current Date and Time (UTC - YYYY-MM-DD HH:MM:SS formatted): 2025-02-18 21:30:59
+# Current Date and Time (UTC - YYYY-MM-DD HH:MM:SS formatted): 2025-02-19 05:28:06
 # Current User's Login: rfreidel
 # Do use FreeBSD-commands Posix-syntax
 # Don't use iocage
 
-USAGE="Usage: ./steamjailer.sh [-c create] [-d destroy] [-s start] [-S stop] [-h help] [-i install] [-u update] JAILNAME"
+USAGE="Usage: ./steamjailer.sh [-c create] [-d destroy] [-s start] [-S stop] [-h help] [-i install] [-u update] [-l list] [-w winetricks] JAILNAME"
 JAILBASE="/jail"
 STEAM_JAIL="steam0"
 WINE="/usr/local/wine-proton/bin/wine"
 
-# Function to check if running as root
 check_root() {
     if [ "$(/usr/bin/id -u)" -ne 0 ]; then
         echo "This script must be run as root." >&2
@@ -18,28 +17,40 @@ check_root() {
     fi
 }
 
-# Function to show usage
 show_usage() {
     echo "${USAGE}"
     exit 1
 }
 
-# Function to handle create command
+do_list() {
+    echo "Installed jails:"
+    if [ -d "${JAILBASE}" ]; then
+        for jail in ${JAILBASE}/*; do
+            if [ -d "${jail}" ]; then
+                jailname=$(basename "${jail}")
+                if /usr/sbin/jls -j "${jailname}" >/dev/null 2>&1; then
+                    echo "${jailname} (Running)"
+                else
+                    echo "${jailname} (Stopped)"
+                fi
+            fi
+        done
+    else
+        echo "No jails found in ${JAILBASE}"
+    fi
+}
+
 do_create() {
     local jailname="$1"
     echo "Creating jail: ${jailname}"
     echo "You will be prompted to set the jail's root password (not host password)"
     
-    # Create jail directory
     /bin/mkdir -p "${JAILBASE}/${jailname}"
-    
-    # Install base system
     /usr/sbin/bsdinstall jail "${JAILBASE}/${jailname}"
     
     if [ $? -eq 0 ]; then
         echo "Jail base system installed successfully"
         
-        # Basic jail configuration
         /bin/cat > "${JAILBASE}/${jailname}/etc/rc.conf" << EOF
 sendmail_enable="NONE"
 syslogd_flags="-ss"
@@ -47,7 +58,6 @@ clear_tmp_enable="YES"
 dbus_enable="YES"
 EOF
 
-        # Create jail configuration
         /bin/cat >> /etc/jail.conf << EOF
 
 ${jailname} {
@@ -71,59 +81,73 @@ EOF
     fi
 }
 
-# Function to handle destroy command
 do_destroy() {
     local jailname="$1"
     echo "Destroying jail: ${jailname}"
     
-    # Stop jail if running
     /usr/sbin/service jail stop "${jailname}"
-    
-    # Remove jail configuration
     /usr/bin/sed -i '' "/^${jailname} {/,/^}/d" /etc/jail.conf
-
-    # Unmount any mounted filesystems
     /sbin/umount -f "${JAILBASE}/${jailname}/dev" 2>/dev/null || true
     
-    # Clear system immutable flags
-    /usr/bin/chflags -R noschg "${JAILBASE}/${jailname}"
+    echo "Removing system flags..."
+    /bin/chflags -R 0 "${JAILBASE}/${jailname}" 2>/dev/null || true
     
-    # Clear user immutable flags
-    /usr/bin/chflags -R nouunlink "${JAILBASE}/${jailname}"
+    echo "Setting all files writable..."
+    /bin/chmod -R u+w "${JAILBASE}/${jailname}" 2>/dev/null || true
     
-    # Remove the jail directory
+    echo "Attempting cleanup with find..."
+    /usr/bin/find "${JAILBASE}/${jailname}" -type f -exec /bin/chmod 644 {} + 2>/dev/null || true
+    /usr/bin/find "${JAILBASE}/${jailname}" -type d -exec /bin/chmod 755 {} + 2>/dev/null || true
+    
+    echo "Removing jail directory..."
     /bin/rm -rf "${JAILBASE}/${jailname}"
     
     if [ -d "${JAILBASE}/${jailname}" ]; then
-        echo "Warning: Could not completely remove jail directory. Manual cleanup may be needed."
+        echo "Warning: Could not completely remove jail directory."
+        echo "Try manual cleanup with:"
+        echo "chflags -R 0 ${JAILBASE}/${jailname}"
+        echo "chmod -R u+w ${JAILBASE}/${jailname}"
+        echo "rm -rf ${JAILBASE}/${jailname}"
     else
         echo "Jail ${jailname} destroyed successfully"
     fi
 }
 
-# Function to handle start command
 do_start() {
     local jailname="$1"
     echo "Starting jail: ${jailname}"
     /usr/sbin/service jail start "${jailname}"
 }
 
-# Function to handle stop command
 do_stop() {
     local jailname="$1"
     echo "Stopping jail: ${jailname}"
     /usr/sbin/service jail stop "${jailname}"
 }
 
-# Function to handle install command
+do_winetricks() {
+    local jailname="$1"
+    echo "Installing Winetricks modules in jail: ${jailname}"
+    
+    if ! /usr/sbin/jls -j "${jailname}" >/dev/null 2>&1; then
+        echo "Error: Jail ${jailname} is not running"
+        echo "Please start the jail first with: $0 -s ${jailname}"
+        exit 1
+    fi
+
+    echo "Updating Winetricks..."
+    /usr/sbin/jexec -U steam "${jailname}" "${WINE}" winetricks --self-update
+
+    echo "Installing Winetricks modules..."
+    /usr/sbin/jexec -U steam "${jailname}" "${WINE}" winetricks dxvk_nvapi d3dcompiler_47 cmd dotnet7 faudio
+}
+
 do_install() {
     local jailname="$1"
     echo "Installing Steam environment in jail: ${jailname}"
     
-    # Update package repository
     /usr/sbin/jexec "${jailname}" /usr/sbin/pkg update
     
-    # Install required packages
     /usr/sbin/jexec "${jailname}" /usr/sbin/pkg install -y \
         wine-proton \
         winetricks \
@@ -134,41 +158,32 @@ do_install() {
         dbus \
         ca_root_nss
     
-    # Set wine-proton environment
     /bin/cat >> "${JAILBASE}/${jailname}/etc/profile" << EOF
 export WINE="${WINE}"
 export WINEPREFIX=/home/steam/.wine
 export DISPLAY=:0
 EOF
 
-    # Create steam user
     /usr/sbin/jexec "${jailname}" /usr/sbin/pw user add steam -m -G wheel
 
-    # Install Steam using wine-proton
     echo "Installing Steam..."
     /usr/sbin/jexec -U steam "${jailname}" "${WINE}" steam
 }
 
-# Function to handle update command
 do_update() {
     local jailname="$1"
     echo "Updating jail: ${jailname}"
     
-    # Update FreeBSD base
     /usr/sbin/freebsd-update -b "${JAILBASE}/${jailname}" fetch install
-    
-    # Update packages
     /usr/sbin/jexec "${jailname}" /usr/sbin/pkg upgrade -y
 }
 
-# Main script execution
 check_root
 
 CMD=""
 JAILNAME=""
 
-# Process command line arguments
-while getopts "c:d:s:S:i:u:h" opt; do
+while getopts "c:d:s:S:i:u:w:lh" opt; do
     case ${opt} in
         c) CMD="create"; JAILNAME="$OPTARG" ;;
         d) CMD="destroy"; JAILNAME="$OPTARG" ;;
@@ -176,20 +191,22 @@ while getopts "c:d:s:S:i:u:h" opt; do
         S) CMD="stop"; JAILNAME="$OPTARG" ;;
         i) CMD="install"; JAILNAME="$OPTARG" ;;
         u) CMD="update"; JAILNAME="$OPTARG" ;;
+        w) CMD="winetricks"; JAILNAME="$OPTARG" ;;
+        l) CMD="list" ;;
         h|?) show_usage ;;
     esac
 done
 
-# If no command was specified, show usage
 [ -z "${CMD}" ] && show_usage
 
-# Execute the appropriate command
 case ${CMD} in
-    create)  do_create "${JAILNAME}" ;;
-    destroy) do_destroy "${JAILNAME}" ;;
-    start)   do_start "${JAILNAME}" ;;
-    stop)    do_stop "${JAILNAME}" ;;
-    install) do_install "${JAILNAME}" ;;
-    update)  do_update "${JAILNAME}" ;;
-    *) show_usage ;;
+    create)     do_create "${JAILNAME}" ;;
+    destroy)    do_destroy "${JAILNAME}" ;;
+    start)      do_start "${JAILNAME}" ;;
+    stop)       do_stop "${JAILNAME}" ;;
+    install)    do_install "${JAILNAME}" ;;
+    update)     do_update "${JAILNAME}" ;;
+    list)       do_list ;;
+    winetricks) do_winetricks "${JAILNAME}" ;;
+    *)          show_usage ;;
 esac
