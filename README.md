@@ -18,7 +18,7 @@ Code attempts compatibility with FreeBSD 13.4 and higher, provides system loggin
 
 I went to all available AI's while working on this project, now my personal experience with AI's and the way I utilize them is I upload my code, have them print the project functions, this helps to identify errors then debug, none of available AI's could successfully read and execute FreeBSD POSIX syntax for me, then I read the other day about a new one, and checked, yup, it was available to me, so I began using it.
 
-Upon first usage it stated it was in learning mode and was capable of any programming task, so I began showing it how to properly setup defines in headers, in the screenshot I took was the results of me asking it to generate a src/main.cpp with includes in header, the code it produced was perfect, I told it so, went back the next day, this time it knew FreeBSD POSIX syntax to generate this following this prompt
+Upon first usage it stated it was in learning mode and was capable of any programming task, so I began showing it how to properly setup defines in headers, in the screenshot I took was the results of me asking it to generate a src/main.cpp with includes in header, the code it produced was perfect, I told it so, went back the next day, this time it knew FreeBSD POSIX syntax well enough to generate this following this prompt
     
     greetings please print functions of project we were working on yesterday
 
