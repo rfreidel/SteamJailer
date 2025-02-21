@@ -1,17 +1,18 @@
 # Project: Steam Jailer
 (devlog, sorta)
-
+## This project is under development, at this point the direction is clear, just fixing bugs
 (now I understand why this has not been done before)
 
 ## Test process
 
 In its current state the project is s shell script which upon successful stability and function I will export to c++ upon proof of stability, the project has developed into a general purpose jail setup which should be adaptable
 	
-        
-Have re-built project using FreeBSD POSIX syntax, project is designed to be desktop agnostic
-	
+I asked Claude 3.5 to print project build instructions https://github.com/rfreidel/SteamJailer/blob/main/BUILD.md
 
-Code not quite there yet, but very close following teaching an AI POSIX syntax
+Have re-built project using FreeBSD POSIX syntax, project is designed to be desktop agnostic
+
+
+Code attempts compatibility with FreeBSD 13.4 and higher, provides system logging
 
 I went to all available AI's while working on this project, now my personal experience with AI's and the way I utilize them is I upload my code, have them print the project functions, this helps to identify errors then debug, none of available AI's could successfully read and execute FreeBSD POSIX syntax for me, then I read the other day about a new one, and checked, yup, it was available to me, so I began using it.
 
