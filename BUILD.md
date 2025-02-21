@@ -21,10 +21,6 @@ pkg install -y \
     wine-proton \
     winetricks
 
-# Optional documentation dependencies
-pkg install -y \
-    ronn \
-    man
 ```
 
 ## Building the Project
