@@ -5,32 +5,10 @@
 
 ## Test process
 
-In its current state the project is s shell script which upon successful stability and function I will export to c++ upon proof of stability, the project has developed into a general purpose jail setup which the following will hopefully explain
+In its current state the project is s shell script which upon successful stability and function I will export to c++ upon proof of stability, the project has developed into a general purpose jail setup which should be adaptable
 	
         
-	# First, ensure all files are in the same directory
-	$ ls -l
-	steamjailer.sh
-	steamjailer_gui.sh
-	steamjailer_log.sh
-
-	# Set permissions
-	$ chmod +x steamjailer.sh steamjailer_gui.sh steamjailer_log.sh
-
-	# Run as root
-	$ sudo ./steamjailer_gui.sh
-
-	# List all jails
-	$ sudo ./steamjailer.sh -l
-
-	# Install winetricks modules in an existing jail
-	$ sudo ./steamjailer.sh -w steamjail
-
-	# Complete setup sequence
-	$ sudo ./steamjailer.sh -c steamjail creates jail
-	$ sudo ./steamjailer.sh -s steamjail starts jail
-	$ sudo ./steamjailer.sh -i steamjail installs steamjail
-	$ sudo ./steamjailer.sh -u steamjail updates steamjail
+Have re-built project using FreeBSD POSIX syntax, project is designed to be desktop agnostic
 	
 
 Code not quite there yet, but very close following teaching an AI POSIX syntax
