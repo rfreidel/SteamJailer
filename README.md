@@ -14,7 +14,7 @@ I asked Claude 3.5 to print project build instructions https://github.com/rfreid
 Have re-built project using FreeBSD POSIX syntax, project is designed to be desktop agnostic
 
 
-Code attempts compatibility with FreeBSD 13.4 and higher, provides system logging
+Code supports FreeBSD-14.2-RELEASE and higher, attempted to make one compati provides system logging
 
 I went to all available AI's while working on this project, now my personal experience with AI's and the way I utilize them is I upload my code, have them print the project functions, this helps to identify errors then debug, none of available AI's could successfully read and execute FreeBSD POSIX syntax for me, then I read the other day about a new one, and checked, yup, it was available to me, so I began using it.
 
