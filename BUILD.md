@@ -32,7 +32,7 @@ pkg install -y \
 1. Clone the repository:
 ```sh
 git clone https://github.com/rfreidel/steamjailer.git
-cd jail-automation
+cd steamjailer
 ```
 
 2. Create and enter build directory:
