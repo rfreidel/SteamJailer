@@ -16,19 +16,24 @@ pkg install -y \
     cmake \
     pkgconf \
     git \
+    wxWidgets32 \
     curl \
     nlohmann-json \
     wine-proton \
     winetricks
 
+# Optional documentation dependencies
+pkg install -y \
+    ronn \
+    man
 ```
 
 ## Building the Project
 
 1. Clone the repository:
 ```sh
-git clone https://github.com/rfreidel/steamjailer.git
-cd steamjailer
+git clone https://github.com/yourusername/jail-automation.git
+cd jail-automation
 ```
 
 2. Create and enter build directory:
