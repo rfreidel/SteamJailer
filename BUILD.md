@@ -28,7 +28,7 @@ pkg install -y \
 
 1. Clone the repository:
 ```sh
-git clone https://github.com/yourusername/jail-automation.git
+git clone https://github.com/rfreidel/jail-automation.git
 cd jail-automation
 ```
 
