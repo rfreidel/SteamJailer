@@ -16,7 +16,7 @@ pkg install -y \
 1. Clone and enter the repository:
 ```sh
 cd ~/Downloads
-git clone https://github.com/user/steamjailer.git
+git clone https://github.com/rfreidel/steamjailer.git
 cd steamjailer
 ```
 
