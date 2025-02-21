@@ -1,0 +1,14 @@
+// 10. Jail Management Functions
+JailManager::startJail()
+JailManager::stopJail()
+JailManager::restartJail()
+
+// 11. Logging Functions
+Logger::log(Level level, message)
+    ├── logToSyslog()            // Log to FreeBSD syslog
+    ├── logToFile()              // Log to custom file
+    └── logToConsole()           // Optional console output
+
+// 12. Cleanup Functions
+JailManager::cleanup()
+WineInstaller::cleanup()

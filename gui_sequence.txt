@@ -1,0 +1,9 @@
+// 9. GUI Implementation
+MainWindow::MainWindow()
+    ├── createMainPanel()
+    ├── createMenuBar()
+    └── initializeEvents()
+
+SteamLauncher::initialize()
+    ├── setupWineEnvironment()
+    └── launchSteam()

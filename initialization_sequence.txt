@@ -1,0 +1,14 @@
+// 1. Main Application Start
+JailAutomationApp::OnInit()
+    ├── checkRootPrivileges()     // Verify running as root
+    └── initializeComponents()     // Initialize core components
+
+// 2. Logger Setup
+Logger::Logger()
+    ├── initializeSyslog()        // Initialize FreeBSD syslog
+    └── setLogFile()              // Set up log file in /var/log/
+
+// 3. Network Checker Initialization
+NetworkChecker::NetworkChecker()
+    ├── checkInternetConnection()
+    └── checkLocalhostConnection()

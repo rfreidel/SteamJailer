@@ -1,0 +1,20 @@
+jail-automation/
+├── CMakeLists.txt
+├── src/
+│   ├── main.cpp
+│   ├── jail_manager.hpp
+│   ├── jail_manager.cpp
+│   ├── network_checker.hpp
+│   ├── network_checker.cpp
+│   ├── wine_installer.hpp
+│   ├── wine_installer.cpp
+│   ├── gui/
+│   │   ├── main_window.hpp
+│   │   ├── main_window.cpp
+│   │   └── steam_launcher.hpp
+│   │   └── steam_launcher.cpp
+├── scripts/
+│   ├── jail_setup.sh
+│   └── wine_setup.sh
+└── config/
+    └── jail_config.json

@@ -1,0 +1,22 @@
+# System Commands
+zfs create zroot/jails/${JAIL_NAME}
+jail -c ${JAIL_NAME}
+service jail start ${JAIL_NAME}
+jls                             # List jails
+
+# Network Configuration
+ifconfig epair0 create
+ifconfig epair0a inet ${JAIL_IP} netmask 255.255.255.0 up
+sysrc gateway_enable="YES"
+pfctl -f /etc/pf.conf
+
+# Package Management
+pkg install -y wine-proton winetricks
+
+# Service Management
+service syslogd restart
+service pf restart
+
+# Logging
+newsyslog -C /etc/newsyslog.conf.d/jailautomation.conf
+logger -p local0.info "Message"  # POSIX-compliant logging

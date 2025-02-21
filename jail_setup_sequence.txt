@@ -1,0 +1,21 @@
+// 4. Jail Setup Sequence
+JailManager::createJail(jailName)
+    ├── setupBaseJail()
+    │   ├── createZFSDataset()    // Create ZFS dataset for jail
+    │   └── installBaseSystem()    // Install FreeBSD base system
+    │
+    ├── configureJailConf()       // Configure jail.conf
+    │   └── writeJailConfiguration()
+    │
+    ├── configureNetworking()
+    │   ├── setupVNET()           // Configure VNET interface
+    │   ├── configureNAT()        // Set up NAT using pf
+    │   └── enableGateway()       // Enable gateway
+    │
+    └── mountZFS()                // Mount ZFS datasets
+
+// 5. Jail Network Configuration
+JailManager::configureNetworking()
+    ├── loadVNETModule()
+    ├── createEpairInterface()
+    └── configureInterface()
