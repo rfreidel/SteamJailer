@@ -8,6 +8,7 @@
 In its current state the project is s shell script which upon successful stability and function I will export to c++ upon proof of stability, the project has developed into a general purpose jail setup which should be adaptable
 
 (update 02/20/2025)
+
 I asked Claude 3.5 to print project build instructions https://github.com/rfreidel/SteamJailer/blob/main/BUILD.md
 
 Have re-built project using FreeBSD POSIX syntax, project is designed to be desktop agnostic
