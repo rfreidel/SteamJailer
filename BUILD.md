@@ -16,7 +16,6 @@ pkg install -y \
     cmake \
     pkgconf \
     git \
-    wxWidgets32 \
     curl \
     nlohmann-json \
     wine-proton \
