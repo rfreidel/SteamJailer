@@ -5,9 +5,6 @@
 Install required packages using pkg:
 ```sh
 pkg install -y \
-    cmake \
-    curl \
-    nlohmann-json \
     zenity
 ```
 
