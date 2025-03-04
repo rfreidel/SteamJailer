@@ -7,6 +7,13 @@ Install required packages using pkg:
 pkg install -y \
     zenity
 ```
+Or, as I did...
+```sh
+doas /usr/sbin/pkg install -y \
+    cmake \
+    curl \
+    nlohmann-json \
+    zenity
 
 ## Build Steps
 
