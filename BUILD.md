@@ -7,20 +7,13 @@ Install required packages using pkg:
 pkg install -y \
     zenity
 ```
-Or, as I did...
-```sh
-doas /usr/sbin/pkg install -y \
-    cmake \
-    curl \
-    nlohmann-json \
-    zenity
 
 ## Build Steps
 
 1. Clone and enter the repository:
 ```sh
 cd ~/Downloads
-git clone https://github.com/rfreidel/steamjailer.git
+git clone https://github.com/user/steamjailer.git
 cd steamjailer
 ```
 

@@ -1,3 +1,5 @@
+## This file requires adjustment to your network interface
+
 #!/bin/sh
 
 # jail_setup.sh - FreeBSD jail setup script
