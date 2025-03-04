@@ -3,9 +3,10 @@
 ## This project is under development, at this point the direction is clear, just fixing bugs
 (now I understand why this has not been done before)
 
-## Test process
+# Project purpose
+To provide an easy way to install a jail, wine-proton and Steam into the jail, and control jailed steam
 
-In its current state the project is s shell script which upon successful stability and function I will export to c++ upon proof of stability, the project has developed into a general purpose jail setup which should be adaptable
+In its current state the project is s c++/shell script project which upon successful stability and function I will turn into an installable package/port
 
 (update 02/20/2025)
 
