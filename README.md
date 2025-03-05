@@ -5,7 +5,7 @@
 
 # Project purpose
 
-To provide an easy way to install a jail, wine-proton and Steam into the jail, and control jailed steam
+To provide an easy way to install a jail, wine-proton and Steam into the jail, and control jailed steam, I tested on 14.2-RELEASE-p2 and partially tested with 15-CURRENT
 
 In its current state the project is s c++/shell script project which upon successful stability and function I will turn into an installable package/port
 
